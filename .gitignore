@@ -1,0 +1,17 @@
+*
+!.bash_completion
+!.bash_profile
+!.bashrc
+!.config/
+!.config/*
+!.config/gh/
+!.config/gh/*
+!.config/git/
+!.config/git/*
+!.config/nnn/
+!.config/nnn/*
+!.config/nnn
+!.config/tmux/
+!.config/tmux/*
+!.gitignore
+!.profile

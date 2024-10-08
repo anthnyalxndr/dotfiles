@@ -1,0 +1,33 @@
+# See Atlassian's documentation for more info: https://www.atlassian.com/git/tutorials/setting-up-a-repository/git-config
+[user]
+	email = 04sparing-lambert@icloud.com
+	name = 04sparing-lambert
+[core]
+	excludesFile = /home/ata/.config/git/ignore
+	editor = code
+[diff]
+  tool = vscode
+[difftool "vscode"]
+  cmd = code --wait --diff $LOCAL $REMOTE
+[merge]
+  tool = vscode
+[mergetool "vscode"]
+  cmd = code --wait $MERGED
+[color]
+	ui = true
+[alias]
+	aa = add -A
+	br = branch
+	ci = commit
+	ciaem = commit --allow-empty-message -m ""
+	ciane = commit --amend --no-edit
+	co = checkout
+	st = status
+[init]
+	defaultBranch = main
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
