@@ -1,0 +1,30 @@
+# See Atlassian's documentation for more info: https://www.atlassian.com/git/tutorials/setting-up-a-repository/git-config
+[user]
+	email = 04sparing-lambert@icloud.com
+	name = 04sparing-lambert
+[core]
+	editor = code --wait
+	excludesfile = /Users/ata/.config/git/ignore
+[diff]
+	tool = default-difftool
+[difftool "default-difftool"]
+	cmd = code --wait --diff $LOCAL $REMOTE
+[merge]
+	tool = code
+[mergetool "code"]
+	cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
+[alias]
+	co = checkout
+	g = git
+	ci = commit
+	st = status
+	ciane = commit --amend --no-edit
+	ciaem = commit --allow-empty-message -m ""
+	a = add
+	ai = add --interactive
+	aa = add --all
+	br = branch
+[init]
+	defaultBranch = main
+[credential]
+	helper = cache

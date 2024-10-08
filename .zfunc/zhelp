@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Makes zsh's one big man page of built-in commands more accessible by emulating
+# bash's help command. All this does is pass the provided command as a search
+# term to LESS within the zshbuiltins man page.
+
+# TODO: Fix issue with not providing an argument.
+command_name="$1:-''"
+
+if [[ -z "$command_name" ]]; then
+  man zshbuiltins
+else
+  LESS="+/^[[:blank:]]+$command_name" man zshbuiltins
+fi
