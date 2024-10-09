@@ -100,3 +100,22 @@ n() {
         rm -f -- "$NNN_TMPFILE" >/dev/null
     }
 }
+
+# Function Definitions
+
+# ord returns the character code associated with a character.
+# In the context of character encoding, "ordinal" refers to the position of a character within a specific ordered set of characters, such as ASCII or Unicode.  The ord() function essentially gives you the numerical position (or "ordinal number") of that character within the relevant character set.
+ord() {
+    # Note the single quote before $1 that causes $1 to evaluate to the ASCII / UTF8 form of itself (just like in C).
+    LC_CTYPE=C printf '%d' "'$1"
+}
+
+# chr returns the character associated with a character code.
+# A note on why octals are used here. Historically, octal representation was commonly used to represent character codes, especially in Unix-like systems.  This is because octal numbers neatly map to groups of 3 bits, which was convenient for working with early computer systems.
+chr() {
+    [ "$1" -lt 256 ] || return 1
+    octal=$(printf '%o' "$1")
+    # takes the octal output and embeds it into an escape sequence. A \ starts the escape sequence and then we must escape that backslash so that it's interpreted literally.
+    escaped_octal=\\$octal
+    printf "$escaped_octal"
+}
