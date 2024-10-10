@@ -1,4 +1,5 @@
 *
+!apt_package_list.txt
 !.bash_completion
 !.bash_profile
 !.bashrc
