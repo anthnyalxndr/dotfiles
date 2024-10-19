@@ -38,5 +38,3 @@ for file in $HOME/.zfunc/*; do
     fi
     autoload -Uz $file
 done
-
-tmux new -A -t "$VSCODE_WORKSPACE"
