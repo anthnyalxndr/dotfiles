@@ -31,3 +31,4 @@
 !.zshrc
 !.zshrc.pre-oh-my-zsh
 !Brewfile
+.config/.DS_Store
