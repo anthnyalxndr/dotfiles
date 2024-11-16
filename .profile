@@ -70,35 +70,35 @@ export NNN_TERMINAL="tmux"
 
 # Configure cd on quit for nnn
 n() {
-    # Block nesting of nnn in subshells
-    [ "${NNNLVL:-0}" -eq 0 ] || {
-        echo "nnn is already running"
-        return
-    }
+  # Block nesting of nnn in subshells
+  [ "${NNNLVL:-0}" -eq 0 ] || {
+    echo "nnn is already running"
+    return
+  }
 
-    # The behaviour is set to cd on quit (nnn checks if NNN_TMPFILE is set)
-    # If NNN_TMPFILE is set to a custom path, it must be exported for nnn to
-    # see. To cd on quit only on ^G, remove the "export" and make sure not to
-    # use a custom path, i.e. set NNN_TMPFILE *exactly* as follows:
-    NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
-    # export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+  # The behaviour is set to cd on quit (nnn checks if NNN_TMPFILE is set)
+  # If NNN_TMPFILE is set to a custom path, it must be exported for nnn to
+  # see. To cd on quit only on ^G, remove the "export" and make sure not to
+  # use a custom path, i.e. set NNN_TMPFILE *exactly* as follows:
+  NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+  # export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
 
-    # Unmask ^Q (, ^V etc.) (if required, see `stty -a`) to Quit nnn
-    # stty start undef
-    # stty stop undef
-    # stty lwrap undef
-    # stty lnext undef
+  # Unmask ^Q (, ^V etc.) (if required, see `stty -a`) to Quit nnn
+  # stty start undef
+  # stty stop undef
+  # stty lwrap undef
+  # stty lnext undef
 
-    # The command builtin allows one to alias nnn to n, if desired, without
-    # making an infinitely recursive alias. -deH are flags that I like to always
-    # be set.
-    command nnn -deH "$@"
+  # The command builtin allows one to alias nnn to n, if desired, without
+  # making an infinitely recursive alias. -deH are flags that I like to always
+  # be set.
+  command nnn -deH "$@"
 
-    [ ! -f "$NNN_TMPFILE" ] || {
-        # shellcheck disable=SC1090
-        . "$NNN_TMPFILE"
-        rm -f -- "$NNN_TMPFILE" >/dev/null
-    }
+  [ ! -f "$NNN_TMPFILE" ] || {
+    # shellcheck disable=SC1090
+    . "$NNN_TMPFILE"
+    rm -f -- "$NNN_TMPFILE" >/dev/null
+  }
 }
 
 # Function Definitions
@@ -106,16 +106,16 @@ n() {
 # ord returns the character code associated with a character.
 # In the context of character encoding, "ordinal" refers to the position of a character within a specific ordered set of characters, such as ASCII or Unicode.  The ord() function essentially gives you the numerical position (or "ordinal number") of that character within the relevant character set.
 ord() {
-    # Note the single quote before $1 that causes $1 to evaluate to the ASCII / UTF8 form of itself (just like in C).
-    LC_CTYPE=C printf '%d' "'$1"
+  # Note the single quote before $1 that causes $1 to evaluate to the ASCII / UTF8 form of itself (just like in C).
+  LC_CTYPE=C printf '%d' "'$1"
 }
 
 # chr returns the character associated with a character code.
 # A note on why octals are used here. Historically, octal representation was commonly used to represent character codes, especially in Unix-like systems.  This is because octal numbers neatly map to groups of 3 bits, which was convenient for working with early computer systems.
 chr() {
-    [ "$1" -lt 256 ] || return 1
-    octal=$(printf '%o' "$1")
-    # takes the octal output and embeds it into an escape sequence. A \ starts the escape sequence and then we must escape that backslash so that it's interpreted literally.
-    escaped_octal=\\$octal
-    printf "$escaped_octal"
+  [ "$1" -lt 256 ] || return 1
+  octal=$(printf '%o' "$1")
+  # takes the octal output and embeds it into an escape sequence. A \ starts the escape sequence and then we must escape that backslash so that it's interpreted literally.
+  escaped_octal=\\$octal
+  printf "$escaped_octal"
 }
