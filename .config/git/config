@@ -26,5 +26,6 @@
 	br = branch
 [init]
 	defaultBranch = main
+	templateDir = /Users/ata/.config/git/templates
 [credential]
 	helper = cache
