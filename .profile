@@ -54,6 +54,7 @@ alias ltrim="sed -E 's/^[[:space:]]+//'"
 alias rtrim="sed -E 's/[[:space:]]+$//'"
 alias update_dotfiles='$HOME/Projects/shell_scripts/update_dotfiles/update_dotfiles'
 alias update-dotfiles=update_dotfiles
+alias wake_thinkpad='wakeonlan 54:e1:ad:bb:48:53'
 alias word-count=wc
 alias zshrc="code ~/.zshrc"
 
