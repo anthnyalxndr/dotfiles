@@ -64,6 +64,12 @@ alias update_dotfiles='$HOME/Projects/shell_scripts/update_dotfiles/update_dotfi
 alias update-dotfiles=update_dotfiles
 alias word-count=wc
 
+# Configure nvm
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+
 # Configure nnn
 export NNN_FIFO="/tmp/nnn.fifo"
 export NNN_PLUG="p:preview-tui;f:fzcd;"
@@ -122,7 +128,8 @@ chr() {
 }
 
 update_vscode_server_socket() {
-  export VSCODE_IPC_HOOK_CLI=$(lsof | grep $UID/vscode-ipc | awk '{print $(NF-2)}' | head -n 1)
+  export VSCODE_IPC_HOOK_CLI=lsof | grep $UID/vscode-ipc | awk '{print $(NF-2)}' | head -n ${1:-1}
+  echo $1
 }
 
 # ~/.bashrc: executed by bash(1) for non-login shells.
