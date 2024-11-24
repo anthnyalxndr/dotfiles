@@ -63,7 +63,6 @@ alias rtrim="sed -E 's/[[:space:]]+$//'"
 alias update_dotfiles='$HOME/Projects/shell_scripts/update_dotfiles/update_dotfiles'
 alias update-dotfiles=update_dotfiles
 alias word-count=wc
-alias update_vscode_server_socket="VSCODE_IPC_HOOK_CLI=$( lsof | grep $UID/vscode-ipc | awk '{print $(NF-1)}' | head -n 1 )"
 
 # Configure nnn
 export NNN_FIFO="/tmp/nnn.fifo"
@@ -120,6 +119,10 @@ chr() {
   # takes the octal output and embeds it into an escape sequence. A \ starts the escape sequence and then we must escape that backslash so that it's interpreted literally.
   escaped_octal=\\$octal
   printf "$escaped_octal"
+}
+
+update_vscode_server_socket() {
+  export VSCODE_IPC_HOOK_CLI=$(lsof | grep $UID/vscode-ipc | awk '{print $(NF-2)}' | head -n 1)
 }
 
 # ~/.bashrc: executed by bash(1) for non-login shells.
