@@ -1,12 +1,4 @@
 *
-.config/Code
-.config/.gsd-keyboard.settings-ported
-.config/gnome-initial-setup-done
-.config/mimeapps.list
-.config/monitors.xml
-.config/monitors.xml~
-.config/user-dirs.dirs
-.config/user-dirs.locale
 !.bash_completion
 !.bash_profile
 !.bashrc
@@ -40,3 +32,14 @@
 !.zshrc.pre-oh-my-zsh
 !Brewfile
 .config/.DS_Store
+.config/Code
+.config/.gsd-keyboard.settings-ported
+.config/gnome-initial-setup-done
+.config/mimeapps.list
+.config/monitors.xml
+.config/monitors.xml~
+.config/user-dirs.dirs
+.config/user-dirs.locale
+.config/GNOME-xdg-terminals.list
+.config/ubuntu-xdg-terminals.list
+.config/xdg-terminals.list
