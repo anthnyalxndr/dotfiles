@@ -63,6 +63,7 @@ alias rtrim="sed -E 's/[[:space:]]+$//'"
 alias update_dotfiles='$HOME/Projects/shell_scripts/update_dotfiles/update_dotfiles'
 alias update-dotfiles=update_dotfiles
 alias word-count=wc
+alias update_vscode_server_socket="VSCODE_IPC_HOOK_CLI=$( lsof | grep $UID/vscode-ipc | awk '{print $(NF-1)}' | head -n 1 )"
 
 # Configure nnn
 export NNN_FIFO="/tmp/nnn.fifo"
