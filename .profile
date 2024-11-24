@@ -37,7 +37,6 @@ alias chrome-debug=chrome_debug
 alias e="echo"
 alias fcmd="{compgen -c && alias | sed 's/\=.*//'} | fzf"
 alias fman="fcmd | xargs man"
-alias g="/opt/homebrew/bin/git"
 alias hfzf="history | cut -c 8- | fzf --tac"
 alias less="less --IGNORE-CASE"
 alias lower="tr \"[:upper:]\" \"[:lower:]\""
