@@ -10,6 +10,10 @@
 !.config/gh/*
 !.config/git/
 !.config/git/*
+!.config/git/templates/
+!.config/git/templates/*
+!.config/git/templates/hooks
+!.config/git/templates/hooks/*
 !.config/nnn
 !.config/nnn/
 !.config/nnn/*
