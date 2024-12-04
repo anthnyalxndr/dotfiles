@@ -13,6 +13,8 @@
 !.config/nnn
 !.config/nnn/
 !.config/nnn/*
+!.config/shell/
+!.config/shell/*
 !.config/tmux/
 !.config/tmux/*
 !.config/wireshark/

@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+# Configure nnn
+export NNN_FIFO="/tmp/nnn.fifo"
+export NNN_PLUG="p:preview-tui;f:fzcd;"
+export NNN_TERMINAL="tmux"
+
+# Configure cd on quit for nnn
+n() {
+  [ "${NNNLVL:-0}" -eq 0 ] || {
+    echo "nnn is already running"
+    return
+  }
+
+  NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+
+  command nnn -deH "$@"
+
+  [ ! -f "$NNN_TMPFILE" ] || {
+    # shellcheck disable=SC1090
+    . "$NNN_TMPFILE"
+    rm -f -- "$NNN_TMPFILE" >/dev/null
+  }
+}
