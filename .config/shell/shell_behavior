@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#!/usr/bin/env bash
+
+# On darwin shell behavior is modified via `set`; whereas, linux allows for changing shell behavior vis `set` and `shopt`.
+# For more info on `set` see:
+# - gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
+# - `help set`
+
+# Allow extended RE patterns
+set -o extendedglob

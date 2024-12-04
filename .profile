@@ -1,9 +1,9 @@
-#!/usr/bin/env sh
-# Source configuration files
-# shellcheck disable=SC1091
-. "$HOME/.config/shell/env_variables.sh"
-. "$HOME/.config/shell/aliases.sh"
-. "$HOME/.config/shell/nvm_config.sh"
-. "$HOME/.config/shell/nnn_config.sh"
-. "$HOME/.config/shell/functions.sh"
-. "$HOME/.config/shell/homebrew_config.sh"
+#!/usr/bin/env bash
+SHELL_CONFIG="$HOME/.config/shell"
+source "$SHELL_CONFIG/env_variables"
+source "$SHELL_CONFIG/aliases"
+source "$SHELL_CONFIG/nvm_config"
+source "$SHELL_CONFIG/nnn_config"
+source "$SHELL_CONFIG/functions"
+source "$SHELL_CONFIG/homebrew_config"
+source "$SHELL_CONFIG/shell_behavior"
