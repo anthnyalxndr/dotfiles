@@ -60,8 +60,9 @@ alias zshrc="code ~/.zshrc"
 # Configure nvm
 export NVM_DIR="$HOME/.nvm"
 # shellcheck disable=SC1091
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+# shellcheck disable=SC1091
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR"/bash_completion # This loads nvm bash_completion
 
 # Configure nnn
 export NNN_FIFO="/tmp/nnn.fifo"
@@ -117,5 +118,5 @@ chr() {
   octal=$(printf '%o' "$1")
   # takes the octal output and embeds it into an escape sequence. A \ starts the escape sequence and then we must escape that backslash so that it's interpreted literally.
   escaped_octal=\\$octal
-  printf "$escaped_octal"
+  printf "%s" "$escaped_octal"
 }
