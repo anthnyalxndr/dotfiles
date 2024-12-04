@@ -15,8 +15,10 @@
 !.config/git/templates/hooks
 !.config/git/templates/hooks/*
 !.config/nnn
-!.config/nnn/
 !.config/nnn/*
+!.config/nnn/*
+!.config/shell/
+!.config/shell/*
 !.config/tmux/
 !.config/tmux/*
 !.config/wireshark/

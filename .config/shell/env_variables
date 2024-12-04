@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+export TEMPLATES="$HOME/templates"
+export XDG_CONFIG_HOME="$HOME/.config"
+export BASHRC="$HOME/.bashrc"
+export EDITOR="$HOME/scripts/vscode_edit_in_place.sh"
+export SSH="$HOME/.ssh"
