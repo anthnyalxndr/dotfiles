@@ -5,6 +5,7 @@ source "$HOME/.profile"
 set -o extendedglob
 
 # Set the theme to load. See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+# shellcheck disable=SC2034
 ZSH_THEME="robbyrussell"
 
 # Uncomment one of the following lines to change the auto-update behavior
@@ -20,21 +21,23 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
+# shellcheck disable=SC2034
 plugins=(colored-man-pages pyenv zsh-autosuggestions zsh-syntax-highlighting poetry)
 
-source ~/.oh-my-zsh/oh-my-zsh.sh
+# shellcheck disable=SC1094
+source "$HOME/.oh-my-zsh/oh-my-zsh.sh"
 
 # Add custom functions to fpath
 fpath=(                    
     ~/.zfunc
-    ~/.zfunc/**/*~*/(CVS)#(/N)
+    ~/.zfunc/**/*~*/\(CVS\)#\(/N\)
     "${fpath[@]}"
 )
 
 # autoload all custom functions
-for file in $HOME/.zfunc/*; do
+for file in "$HOME"/.zfunc/*; do
     if [[ $file = $HOME/.zfunc/READ_ME.md ]]; then
         continue
     fi
-    autoload -Uz $file
+    autoload -Uz "$file"
 done
