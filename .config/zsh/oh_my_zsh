@@ -1,0 +1,19 @@
+#!/usr/bin/env zsh
+
+# Set the theme to load. See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+ZSH_THEME="robbyrussell"
+
+# Uncomment one of the following lines to change the auto-update behavior
+zstyle ':omz:update' mode auto      # update automatically without asking
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+
+# Which plugins would you like to load?
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+plugins=(colored-man-pages pyenv zsh-autosuggestions zsh-syntax-highlighting poetry)
+
+source "$HOME/.oh-my-zsh/oh-my-zsh.sh"
