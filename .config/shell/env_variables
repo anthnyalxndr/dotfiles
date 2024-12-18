@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+vscode() {
+    code --wait "$@"
+}
+
+export TEMPLATES="$HOME/templates"
+export XDG_CONFIG_HOME="$HOME/.config"
+export BASHRC="$HOME/.bashrc"
+export EDITOR=vscode
+export SSH="$HOME/.ssh"
