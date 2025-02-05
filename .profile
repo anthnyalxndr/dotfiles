@@ -10,7 +10,7 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
-SHELL_CONFIG="~/.config/shell"
+SHELL_CONFIG="$HOME/.config/shell"
 
 source "$SHELL_CONFIG/path"
 source "$SHELL_CONFIG/env_variables"
