@@ -6,7 +6,7 @@ alias line-count="wc -l"
 alias bashrc="code ~/.bashrc"
 alias profile="code ~/.profile"
 alias c="code"
-alias chrome_debug='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --user-data-dir=$HOME/chrome_debug_user_data_dir&'
+alias chrome_debug="open -a \"Google Chrome\" --args --remote-debugging-port=9222"
 alias chrome-debug=chrome_debug
 alias e="echo"
 alias fcmd="{compgen -c && alias | sed 's/\=.*//'} | fzf"
