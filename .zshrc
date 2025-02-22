@@ -5,3 +5,5 @@ source "$HOME/.profile"
 for file in $XDG_CONFIG_HOME/zsh/*; do
     source "$file";
 done
+
+PROMPT="$ "
