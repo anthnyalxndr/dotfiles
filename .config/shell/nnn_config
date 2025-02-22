@@ -13,7 +13,7 @@ n() {
 
   NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
 
-  command nnn -deH "$@"
+  command nnn -eH "$@"
 
   [ ! -f "$NNN_TMPFILE" ] || {
     # shellcheck disable=SC1090
