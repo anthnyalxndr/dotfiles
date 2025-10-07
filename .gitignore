@@ -31,6 +31,8 @@
 !.config/wireshark/recent_common
 !.gitignore
 !.profile
+!propagate_dotfiles
+!update_dotfiles
 !.zfunc/
 !.zfunc/*
 !.zprofile
