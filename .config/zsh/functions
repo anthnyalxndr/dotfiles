@@ -3,7 +3,6 @@
 # Add custom functions to fpath
 fpath=(                    
     ~/.zfunc
-    ~/.zfunc/**/*~*/\(CVS\)#\(/N\)
     "${fpath[@]}"
 )
 
