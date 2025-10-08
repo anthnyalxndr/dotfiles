@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# List of files/directories to ignore
+ignore_list=(".Brewfile" ".git")
+
+# Function to check if a file/directory is in the ignore list
+is_ignored() {
+  for ignored in "${ignore_list[@]}"; do
+    if [ "$1" == "$ignored" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+# Loop over all files and directories in the current directory
+for item in "$HOME"/dotfiles/{*,.*}; do
+  echo "$item"
+  # Skip the item if it's in the ignore list
+  if is_ignored basename "$item"; then
+    echo "Skipping $item (ignored)"
+    continue
+  fi
+
+  # Determine the corresponding path in the home directory
+  home_item="$HOME/$(basename "$item")"
+  
+  # Check if the item is a directory
+  if [ -d "$item" ]; then
+    # If the directory exists in the home directory, copy it recursively
+    if [ -d "$home_item" ]; then
+      cp -r "$home_item" "$item"
+      echo "Copied directory $home_item to $item"
+    else
+      echo "Directory $home_item does not exist"
+    fi
+  # Check if the item is a file
+  elif [ -f "$item" ]; then
+    # If the file exists in the home directory, copy it
+    if [ -f "$home_item" ]; then
+      cp "$home_item" "$item"
+      echo "Copied file $home_item to $item"
+    else
+      echo "File $home_item does not exist"
+    fi
+  else
+    echo "$item is neither a file nor a directory, skipping..."
+  fi
+done
+
+rm Brewfile && /opt/homebrew/bin/brew bundle dump

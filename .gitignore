@@ -22,6 +22,8 @@
 !.zfunc/*
 !.zshrc
 !Brewfile
+!propagate_dotfiles
+!update_dotfiles
 .config/.DS_Store
 .config/Code
 .config/.gsd-keyboard.settings-ported
@@ -34,4 +36,3 @@
 .config/GNOME-xdg-terminals.list
 .config/ubuntu-xdg-terminals.list
 .config/xdg-terminals.list
-.config/nvm
