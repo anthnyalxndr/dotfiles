@@ -1,0 +1,16 @@
+#!/usr/bin/env zsh
+
+# Add custom functions to fpath
+fpath=(                    
+    ~/.zfunc
+    ~/.zfunc/**/*~*/\(CVS\)#\(/N\)
+    "${fpath[@]}"
+)
+
+# autoload all custom functions
+for file in "$HOME"/.zfunc/*; do
+    if [[ $file = $HOME/.zfunc/READ_ME.md ]]; then
+        continue
+    fi
+    autoload -Uz "$file"
+done

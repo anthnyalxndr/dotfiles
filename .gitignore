@@ -16,6 +16,8 @@
 !.config/shell/*
 !.config/tmux/
 !.config/tmux/*
+!.config/zsh/
+!.config/zsh/*
 !.gitignore
 !.profile
 !.zfunc/
