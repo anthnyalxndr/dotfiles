@@ -1,22 +1,4 @@
 #!/usr/bin/env bash
 
-# Shell behavior is modified via two builtins: `set` and `shopt`.
-# For more info on `set` see:
-# - gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
-# - `help set`
-# For more info on `shopt` see:
-# - gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
-# - `help shopt`
-
-# SHOPT SETTINGS
-# extglob: Enable extended pattern matching (RE) features.
-shopt -s extglob
-
-# checkwinsize: check the window size after each command and, if necessary, update the values of LINES and COLUMNS.
-shopt -s checkwinsize
-
-# cdspell: If set, minor errors in the spelling of a directory component in a cd command will be corrected. The errors checked for are transposed characters, a missing character, and a character too many. If a correction is found, the corrected path is printed, and the command proceeds.
-shopt -s cdspell
-
-# dirspell: If set, Bash attempts spelling correction on directory names during word completion if the directory name initially supplied does not exist.
-shopt -s dirspell
+# Allow extended RE patterns
+set -o extendedglob

@@ -1,0 +1,6 @@
+source "$SHELL_CONFIG/aliases"
+source "$SHELL_CONFIG/env_variables"
+source "$SHELL_CONFIG/nnn"
+source "$SHELL_CONFIG/nvm"
+source "$SHELL_CONFIG/path"
+source "$SHELL_CONFIG/shell_behavior"
