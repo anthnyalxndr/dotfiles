@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+BRANCH=${1:-darwin}  # Default to 'darwin' if no argument provided
 DOTFILES_DIR=${1:-"$HOME/dotfiles/"}
 # Ensure DOTFILES_DIR ends with a slash. This is necessary for rsync to work correctly.
 SOURCE="${DOTFILES_DIR%/}/"
 DESTINATION="$HOME/"
+
+git checkout "$BRANCH"
 
 rsync \
     --archive \
