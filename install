@@ -6,6 +6,12 @@ DOTFILES_DIR=${1:-"$HOME/dotfiles/"}
 SOURCE="${DOTFILES_DIR%/}/"
 DESTINATION="$HOME/"
 
+if [ "$(pwd)" != "$DOTFILES_DIR" ]; then
+    cd "$DOTFILES_DIR"
+fi
+
+git checkout ubuntu_2401
+
 rsync \
     --archive \
     --verbose \
