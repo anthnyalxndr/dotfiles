@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DOTFILES_DIR=${1:-"$HOME/dotfiles/"}
+# Ensure DOTFILES_DIR ends with a slash. This is necessary for rsync to work correctly.
+SOURCE="${DOTFILES_DIR%/}/"
+DESTINATION="$HOME/"
+
+if [ "$(pwd)" != "$DOTFILES_DIR" ]; then
+    cd "$DOTFILES_DIR"
+fi
+
+git checkout darwin
+
+rsync \
+    --archive \
+    --verbose \
+    --exclude .git \
+    --exclude .gitignore \
+    --exclude .DS_Store \
+    --exclude propagate_dotfiles \
+    --exclude update_dotfiles \
+    "$SOURCE" \
+    "$DESTINATION"

@@ -28,6 +28,7 @@
 !.config/wireshark/recent
 !.config/wireshark/recent_common
 !.gitignore
+!install
 !.profile
 !.zfunc/
 !.zfunc/*
