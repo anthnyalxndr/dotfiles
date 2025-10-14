@@ -25,7 +25,7 @@
 !.zfunc/*
 !.zshrc
 !Brewfile
-!propagate_dotfiles
+!install
 !update_dotfiles
 .config/.DS_Store
 .config/Code
