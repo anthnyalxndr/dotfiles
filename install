@@ -24,3 +24,5 @@ rsync \
     "$DESTINATION"
 
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+chsh -s "$(which zsh)"
