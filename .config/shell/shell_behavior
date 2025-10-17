@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
-
 # Allow extended RE patterns
 [ $SHELL = '/bin/zsh' ] && set -o extendedglob
