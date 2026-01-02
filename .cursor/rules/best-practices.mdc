@@ -1,0 +1,116 @@
+# Best Practices for AI Coding Agents
+
+This rule applies to all projects. Project-specific rules take precedence for detailed conventions.
+
+---
+
+## Core Principles
+
+### Explore Before Acting
+
+- ALWAYS read and understand relevant code before proposing changes
+- Never assume code behavior without inspecting it first
+- If a user references a file, open and read it before explaining or fixing
+
+### Minimal Changes
+
+- Only change what is explicitly requested. If you notice another related issue, mention it in the response so that the user can consider it later.
+- A bug fix doesn't need surrounding code "cleaned up"
+- A simple feature doesn't need extra configurability
+- Don't refactor code unless asked, but if you notice a refactor opportunity, mention it in the response so that the user can consider it later.
+
+### Match Existing Style
+
+- Follow the codebase's existing conventions and patterns
+- Use the same naming conventions, indentation, and formatting
+- Reuse existing abstractions rather than creating new ones
+
+### Simple Solutions First
+
+- The right amount of complexity is the minimum needed for the current task
+- Don't design for hypothetical future requirements
+- Don't create helpers or utilities for one-time operations
+
+---
+
+## Anti-Pattern Prevention
+
+Never do these unless explicitly asked:
+
+- Add features, refactoring, or "improvements" beyond the request
+- Create unnecessary abstractions for one-time operations
+- Add error handling for scenarios that cannot happen
+- Add backwards-compatibility shims when code can be changed directly
+- Use defensive coding against internal code you control
+- Add validation beyond system boundaries (user input, external APIs)
+
+---
+
+## Code Quality Standards
+
+### TypeScript/JavaScript
+
+- Prefer explicit return types for exported functions
+- Use `const` by default, `let` only when mutation is needed
+- Prefer early returns over deeply nested conditionals
+- Use descriptive variable names; avoid abbreviations
+- Use `import type` for type-only imports
+- Handle errors explicitly; never swallow them silently
+
+### Python
+
+- Add type hints to function signatures
+- Write docstrings for public functions (keep them concise)
+- Follow PEP 8 conventions
+- Prefer list comprehensions for simple transformations
+- Use context managers for resource management
+- Handle exceptions explicitly; don't use bare `except:`
+
+---
+
+## Error Handling
+
+- Always handle errors explicitly or propagate them up
+- Never swallow errors silently (no empty catch blocks)
+- Log errors with context using `console.error` (JS/TS) or `logging.error` (Python)
+- At system boundaries, validate and return meaningful error messages
+
+---
+
+## Testing
+
+When the project has test infrastructure:
+
+- Add tests for new functions and bug fixes
+- Focus on behavior, not implementation details
+- Test edge cases and error conditions
+- Keep tests focused and readable
+
+If no test infrastructure is present, suggest creating it and adding tests for the new functionality.
+
+---
+
+## Documentation
+
+- Document non-obvious logic with brief inline comments
+- Keep JSDoc/docstrings concise and useful (not verbose)
+- Explain "why", not "what" (the code shows what)
+- Update documentation when changing behavior
+
+---
+
+## Security
+
+- Never hardcode secrets or API keys
+- Validate user input at system boundaries
+- Be aware of common vulnerabilities (XSS, SQL injection, path traversal)
+- Use parameterized queries for database operations
+- Sanitize output when rendering user-provided content
+
+---
+
+## Communication
+
+- When uncertain, ask clarifying questions before making changes
+- Explain trade-offs when multiple valid approaches exist
+- Be direct about limitations or risks in a proposed solution

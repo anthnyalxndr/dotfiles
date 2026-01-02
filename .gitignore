@@ -18,6 +18,11 @@
 !.config/tmux/*
 !.config/zsh/
 !.config/zsh/*
+!.cursor
+!.cursor/rules
+!.cursor/rules/*
+!.cursor/commands
+!.cursor/commands/*
 !.profile
 !.gitignore
 !.profile
