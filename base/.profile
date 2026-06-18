@@ -7,3 +7,11 @@ source "$SHELL_CONFIG/nnn_config"
 source "$SHELL_CONFIG/functions"
 source "$SHELL_CONFIG/shell_behavior"
 source "$SHELL_CONFIG/go"
+
+# OS-specific modules (darwin / linux), provided by the os-* stow package.
+OS="$(uname | tr '[:upper:]' '[:lower:]')"
+if [ -d "$SHELL_CONFIG/os/$OS" ]; then
+  for f in "$SHELL_CONFIG/os/$OS"/*; do
+    [ -r "$f" ] && source "$f"
+  done
+fi
