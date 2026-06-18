@@ -1,30 +1,143 @@
 # dotfiles
 
-Managed with a **bare git repo**: git dir `~/.dotfiles`, work tree `$HOME`. Files are real
-files in place (no symlinks), so editing a tracked dotfile — by hand or by a tool/agent —
-just shows up as a diff in `config status`.
+Personal dotfiles, managed with a **bare git repository**: the git database lives in
+`~/.dotfiles` and the *work tree* is `$HOME` itself. Files are tracked as **real files in
+place** — there are no symlinks and no copy/sync step.
+
+---
+
+## Why a bare repo (and not symlinks)
+
+The common alternatives and why this repo doesn't use them:
+
+- **Copy/rsync into `$HOME`** (the old setup): edits drift between the repo and `$HOME`
+  because you must manually sync in both directions. Avoided.
+- **Symlinks (e.g. GNU Stow):** `~/.zshrc` becomes a link into a repo dir. Clean, but it has
+  one failure mode that matters here — **atomic-save clobber**. Many programs (and AI
+  agents/editors) save a file by writing a temp file and `rename()`-ing it over the
+  original. `rename()` *replaces the symlink with a regular file*, silently severing the link
+  to the repo. The edit lands in `$HOME`, the repo goes stale, and you don't notice. Because
+  files here are edited by tools and agents that do exactly this, symlinks were rejected.
+- **Bare repo (this setup):** files are real files in `$HOME`. Any write — by hand, by a
+  tool, or by an agent — is just a normal change that shows up as a diff in `config status`.
+  Nothing breaks, nothing drifts silently.
+
+The trade-off accepted: you drive git through a `config` alias (not plain `git`), you must
+add files explicitly, and a fresh-machine checkout needs a small backup step. See below.
+
+---
+
+## How a bare repo differs from a standard repo
+
+### Standard repo
+The git database lives **inside** the work tree as a `.git/` folder. In `~/project`, git
+finds `~/project/.git` and infers "the work tree is the folder containing `.git`." You `cd`
+in and run `git`. The repo is a self-contained folder you can browse or delete as a unit.
+
+### Bare-repo dotfiles trick
+You **separate the git database from the work tree**. The database goes in a side folder
+(`~/.dotfiles`), and it is pointed at `$HOME` as its work tree. Because there is **no `.git/`
+in `$HOME`**, your home directory never *becomes* a normal repo — which is the whole reason
+it doesn't collide with the many other git repos that live under `$HOME` (`~/.oh-my-zsh`,
+`~/.nvm`, `~/.tmux/plugins/tpm`, everything under `~/Projects/`, etc.).
+
+It's wired together with an alias that pre-fills the two locations:
+
+```sh
+alias config='git --git-dir="$HOME/.dotfiles" --work-tree="$HOME"'
+```
+
+So `config` *is* `git`, just told where its database (`~/.dotfiles`) and work tree (`$HOME`)
+are. This alias is defined in `~/.config/shell/config_alias` and sourced by `~/.profile`.
+
+### Side-by-side
+
+| | Standard repo | This bare-repo setup |
+|---|---|---|
+| Git command | `git …` | `config …` (the alias) |
+| Where you run it | `cd` into the repo first | anywhere — work tree is always `$HOME` |
+| Staging files | `git add .` is fine | **only** `config add <file>` — never `config add -A`/`.` |
+| `… status` | shows the repo | needs `status.showUntrackedFiles=no`, else it lists *all* of `$HOME` |
+| The repo as a place | a browsable, deletable folder | intermingled with your real home dir |
+| New machine | `git clone url ~/project` | clone `--bare`, then `config checkout` (back up conflicts first) |
+| Files in `$HOME` | n/a | the actual tracked files, edited in place |
+
+### Things to internalize
+
+- **`status.showUntrackedFiles=no` is essential.** The work tree is your entire home dir, so
+  without it `config status` would list thousands of untracked files. With it, only files
+  you've explicitly added show up — and your other repos under `$HOME` stay invisible.
+- **You lose `git status` as a "new untracked file" signal.** You must *remember* to
+  `config add` each new dotfile you want tracked.
+- **The footgun is `config add .` / `config add -A`** near a nested repo or a big directory.
+  Plain `git` typed by mistake in `$HOME` is harmless (no `.git` there, so it just errors) —
+  the danger is specifically the `config` alias plus a wildcard add. Always add explicit
+  paths.
+- **Nested repos are not submodules.** git won't recurse into another repo's `.git`; with
+  `showUntrackedFiles=no` those repos are simply invisible. Just never `config add` inside
+  them.
+
+---
 
 ## Bootstrap a new machine
+
 ```sh
 curl -fsSL https://raw.githubusercontent.com/anthnyalxndr/dotfiles/main/bootstrap.sh | bash
-# or: clone this repo and run ./bootstrap.sh
+# or: download bootstrap.sh from the repo and run ./bootstrap.sh
 ```
+
+`bootstrap.sh` clones the repo bare into `~/.dotfiles`, sets `showUntrackedFiles=no`, and
+checks the files out into `$HOME`. If files already exist (e.g. a default `~/.bashrc`), the
+checkout would refuse to overwrite them — the script automatically moves the conflicting
+files into `~/.dotfiles-backup-<timestamp>/` and retries, so nothing is lost.
+
+After it runs, open a new shell — the `config` alias loads via `~/.config/shell/config_alias`.
+
+---
 
 ## Daily workflow
-```sh
-config status                 # what changed
-config add ~/.zshrc           # stage a specific file (NEVER `config add -A`)
-config commit -m "..."        # commit
-config push                   # publish
-```
-`config` is `git --git-dir=$HOME/.dotfiles --work-tree=$HOME` (defined in
-`~/.config/shell/config_alias`). `status.showUntrackedFiles` is `no`, so only tracked files
-appear — your other repos under `$HOME` stay invisible.
 
-## OS differences
-`~/.profile` sources shared `~/.config/shell/*` then `~/.config/shell/os/$(uname)/*`. All OS
-files are tracked; only the matching OS is sourced. No branches.
+```sh
+config status                 # what changed (only tracked files appear)
+config add ~/.zshrc           # stage a specific file — NEVER `config add -A`
+config commit -m "..."        # commit
+config push                   # publish to GitHub
+config diff                   # review pending changes
+```
+
+An agent or tool editing a tracked file just shows up as a diff in `config status` — no
+broken links, no silent drift. Review and `config commit` it like any other change.
+
+---
+
+## OS differences (no branches)
+
+`~/.profile` sources the shared `~/.config/shell/*` modules, then any modules under
+`~/.config/shell/os/$(uname | tr A-Z a-z)/` (`darwin` or `linux`). All OS files are tracked
+and present on every machine; only the matching OS directory is sourced at runtime. This
+replaces the old branch-per-OS scheme — there is a single `main` branch for all machines.
+
+```bash
+OS="$(uname | tr '[:upper:]' '[:lower:]')"     # darwin / linux
+if [ -d "$SHELL_CONFIG/os/$OS" ]; then
+  for f in "$SHELL_CONFIG/os/$OS"/*; do [ -r "$f" ] && source "$f"; done
+fi
+```
+
+Per-OS package installs are driven from the manifests below, not from git branches.
+
+---
 
 ## Layout
-- `~/.config/shell/` — shared shell modules + `os/{darwin,linux}/`
-- `Brewfile`, `packages/{apt,dnf}.txt` — package manifests
+
+- `~/.config/shell/` — shared shell modules, plus `os/{darwin,linux}/` for OS-specific bits
+  and `config_alias` (defines the `config` alias).
+- `~/.config/{git,tmux,zsh}/`, `~/.zfunc/`, `~/.cursor/{commands,rules}` — tool config.
+- `Brewfile`, `packages/apt.txt`, `packages/dnf.txt` — package manifests (data).
+- `bootstrap.sh` — fresh-machine setup.
+
+## Recovering archived branches
+
+The previous per-OS branches were deleted from GitHub but preserved as tags
+(`archive/darwin`, `archive/fedora`, `archive/ubuntu_2204`, `archive/ubuntu_2401`,
+`archive/devcontainer`). To inspect one: `config checkout -b restore archive/fedora`.
