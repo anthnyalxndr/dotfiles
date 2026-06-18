@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+# Manage dotfiles via the bare repo without a .git in $HOME.
+alias config='git --git-dir="$HOME/.dotfiles" --work-tree="$HOME"'
