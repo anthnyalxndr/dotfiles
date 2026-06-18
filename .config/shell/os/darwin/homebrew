@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+# Set PATH, MANPATH, etc., for Homebrew (Apple Silicon prefix).
+eval "$(/opt/homebrew/bin/brew shellenv)"
