@@ -1,40 +1,15 @@
-*
-!.bash_completion
-!.bash_profile
-!.bashrc
-!.config/
-!.config/*
-!.config/1Password/ssh
-!.config/1Password/ssh/*
-!.config/gh/
-!.config/gh/*
-!.config/git/
-!.config/git/*
-!.config/nnn
-!.config/nnn/
-!.config/nnn/*
-!.config/shell/
-!.config/shell/*
-!.config/zsh/
-!.config/zsh/*
-!.config/tmux/
-!.config/tmux/*
-!.config/wireshark/
-!.config/wireshark/language
-!.config/wireshark/profiles/
-!.config/wireshark/profiles/*
-!.config/wireshark/profiles/Test/
-!.config/wireshark/profiles/Test/*
-!.config/wireshark/recent
-!.config/wireshark/recent_common
-!.gitignore
-!install
-!.profile
-!.zfunc/
-!.zfunc/*
-!.zprofile
-!.zshrc
-!.zshrc.pre-oh-my-zsh
-!Brewfile
-.config/.DS_Store
-.config/htop
+# Bare dotfiles git dir — never track
+.dotfiles/
+
+# OS / editor cruft
+.DS_Store
+*~
+.*.sw[a-p]
+.~lock.*#
+
+# Machine/account state — never track
+.config/gh/hosts.yml
+.config/gh/config.yml
+
+# Binary blobs
+*.tar.gz
