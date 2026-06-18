@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+# Linuxbrew, if installed.
+[ -x /home/linuxbrew/.linuxbrew/bin/brew ] && \
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
