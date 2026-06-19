@@ -83,8 +83,8 @@ So `dotfiles` *is* `git`, just told where its database (`~/.dotfiles`) and work 
 ## Bootstrap a new machine
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/anthnyalxndr/dotfiles/main/bootstrap.sh | bash
-# or: download bootstrap.sh from the repo and run ./bootstrap.sh
+curl -fsSL https://raw.githubusercontent.com/anthnyalxndr/dotfiles/main/.config/dotfiles/bootstrap.sh | bash
+# or, after the repo is checked out: ~/.config/dotfiles/bootstrap.sh
 ```
 
 `bootstrap.sh` clones the repo bare into `~/.dotfiles`, sets `showUntrackedFiles=no`, and
@@ -142,8 +142,10 @@ Per-OS package installs are driven from the manifests below, not from git branch
 - `~/.config/shell/` — shared shell modules, plus `os/{darwin,linux}/` for OS-specific bits
   and `dotfiles_alias` (defines the `dotfiles` alias).
 - `~/.config/{git,tmux,zsh}/`, `~/.zfunc/`, `~/.cursor/{commands,rules}` — tool config.
-- `Brewfile`, `packages/apt.txt`, `packages/dnf.txt` — package manifests (data).
-- `bootstrap.sh` — fresh-machine setup.
+- `~/.config/dotfiles/` — repo tooling and package manifests: `bootstrap.sh`,
+  `Brewfile`, `packages/apt.txt`, `packages/dnf.txt`.
+- `~/README.md`, `~/AGENTS.md`, `~/CLAUDE.md` — kept at `$HOME` root (GitHub renders the
+  README there; agents discover `AGENTS.md`/`CLAUDE.md` there).
 
 ## Recovering archived branches
 
