@@ -137,10 +137,25 @@ Per-OS package installs are driven from the manifests below, not from git branch
 
 ---
 
+## Machine-local overrides
+
+For anything machine-specific or secret — a per-host alias, a token, a path that exists on
+only one box — use `~/.config/shell/local`. It is **untracked** (gitignored) and sourced
+*last* by `~/.profile`, so it overrides the shared modules and never reaches the public repo:
+
+```sh
+# ~/.config/shell/local  (not committed)
+alias wake_box='wakeonlan aa:bb:cc:dd:ee:ff'
+export SOME_TOKEN=…
+```
+
+---
+
 ## Layout
 
-- `~/.config/shell/` — shared shell modules, plus `os/{darwin,linux}/` for OS-specific bits
-  and `dotfiles_alias` (defines the `dotfiles` alias).
+- `~/.config/shell/` — shared shell modules, `os/{darwin,linux}/` for OS-specific bits,
+  `dotfiles_alias` (defines the `dotfiles` alias), and an untracked `local` for
+  machine-specific/secret overrides.
 - `~/.config/{git,tmux,zsh}/`, `~/.zfunc/`, `~/.cursor/{commands,rules}` — tool config.
 - `~/.config/dotfiles/` — repo tooling and package manifests: `bootstrap.sh`,
   `Brewfile`, `packages/apt.txt`, `packages/dnf.txt`.
@@ -151,4 +166,5 @@ Per-OS package installs are driven from the manifests below, not from git branch
 
 The previous per-OS branches were deleted from GitHub but preserved as tags
 (`archive/darwin`, `archive/fedora`, `archive/ubuntu_2204`, `archive/ubuntu_2401`,
-`archive/devcontainer`). To inspect one: `dotfiles checkout -b restore archive/fedora`.
+`archive/devcontainer`, and `archive/stow-migration` — the abandoned GNU Stow approach).
+To inspect one: `dotfiles checkout -b restore archive/fedora`.
