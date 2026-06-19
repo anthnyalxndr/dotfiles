@@ -1,5 +1,10 @@
 # Dotfiles Redesign — Bare Git Repo (`$HOME` work tree), single `main`
 
+> **Historical record.** Written during the migration. Two things changed afterward: the
+> git alias was renamed `config` → `dotfiles` (defined in `~/.config/shell/dotfiles_alias`),
+> and repo tooling moved under `~/.config/dotfiles/` (`bootstrap.sh`, `Brewfile`, `packages/`).
+> For the current setup see `~/README.md`; read any `config …` command below as `dotfiles …`.
+
 **Date:** 2026-06-18
 **Status:** Approved (design); supersedes the Stow design of the same date
 **Repo:** `anthnyalxndr/dotfiles` (public) · bare git dir at `~/.dotfiles`

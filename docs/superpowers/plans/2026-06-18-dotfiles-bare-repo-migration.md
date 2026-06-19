@@ -1,5 +1,11 @@
 # Dotfiles Bare-Repo Migration Implementation Plan
 
+> **Historical record.** Written during the migration. Two things changed afterward: the
+> git alias was renamed `config` → `dotfiles` (defined in `~/.config/shell/dotfiles_alias`),
+> and repo tooling moved under `~/.config/dotfiles/` (`bootstrap.sh`, `Brewfile`, `packages/`),
+> so the bootstrap curl URL is `…/main/.config/dotfiles/bootstrap.sh`. For the current setup
+> see `~/README.md`; read any `config …` command below as `dotfiles …`.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: superpowers:executing-plans. Steps use checkbox (`- [ ]`) syntax.
 
 **Goal:** Convert the copy/rsync, branch-per-OS dotfiles repo into a bare git repo (`~/.dotfiles` git dir, `$HOME` work tree) with a single `main` branch and branchless OS-conditional sourcing.
