@@ -16,3 +16,6 @@ if [ -d "$SHELL_CONFIG/os/$OS" ]; then
     [ -r "$f" ] && source "$f"
   done
 fi
+
+# Machine-local overrides (untracked): secrets, per-host tweaks, machine-specific aliases.
+[ -r "$SHELL_CONFIG/local" ] && source "$SHELL_CONFIG/local"

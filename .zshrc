@@ -2,7 +2,7 @@
 source "$HOME/.profile"
 
 # Source zsh specific configurations
-for file in $XDG_CONFIG_HOME/zsh/*; do
+for file in "$XDG_CONFIG_HOME"/zsh/*(N); do
     source "$file";
 done
 

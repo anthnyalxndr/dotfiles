@@ -16,4 +16,4 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(colored-man-pages pyenv zsh-autosuggestions zsh-syntax-highlighting poetry)
 
-source "$HOME/.oh-my-zsh/oh-my-zsh.sh"
+[ -r "$HOME/.oh-my-zsh/oh-my-zsh.sh" ] && source "$HOME/.oh-my-zsh/oh-my-zsh.sh"

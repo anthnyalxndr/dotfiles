@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+# macOS-only PATH additions (guarded so they no-op when absent).
+[ -d /opt/homebrew/opt/postgresql@16/bin ] && export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
+[ -d /Library/PostgreSQL/16/bin ] && export PATH="/Library/PostgreSQL/16/bin:$PATH"

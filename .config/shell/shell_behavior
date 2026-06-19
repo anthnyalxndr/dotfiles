@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
-#!/usr/bin/env bash
 
-# On darwin shell behavior is modified via `set`; whereas, linux allows for changing shell behavior vis `set` and `shopt`.
-# For more info on `set` see:
-# - gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
-# - `help set`
+# On darwin shell behavior is modified via `set`; linux also allows `shopt`.
+# See gnu.org/software/bash/manual/html_node/The-Set-Builtin.html or `help set`.
 
-# Allow extended RE patterns
-set -o extendedglob
+# Enable extended glob patterns. The option name differs by shell, so guard it
+# (unguarded `set -o extendedglob` errors on bash startup).
+if [ -n "${ZSH_VERSION:-}" ]; then
+  setopt extendedglob
+elif [ -n "${BASH_VERSION:-}" ]; then
+  shopt -s extglob
+fi

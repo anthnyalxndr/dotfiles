@@ -9,7 +9,7 @@ alias c="code"
 alias chrome_debug="open -a \"Google Chrome\" --args --remote-debugging-port=9222"
 alias chrome-debug=chrome_debug
 alias e="echo"
-alias fcmd="{compgen -c && alias | sed 's/\=.*//'} | fzf"
+alias fcmd='{ compgen -c; alias | sed "s/=.*//"; } | fzf'
 alias fman="fcmd | xargs man"
 alias g="/usr/bin/env git"
 alias hfzf="history | cut -c 8- | fzf --tac"
@@ -26,8 +26,5 @@ alias tmux-conf='echo $XDG_CONFIG_HOME/tmux/tmux.conf'
 alias trim="sed -E 's/^[[:space:]]+//' | sed -E 's/[[:space:]]+$//'"
 alias ltrim="sed -E 's/^[[:space:]]+//'"
 alias rtrim="sed -E 's/[[:space:]]+$//'"
-alias update_dotfiles='$HOME/Projects/shell_scripts/update_dotfiles/update_dotfiles'
-alias update-dotfiles=update_dotfiles
-alias wake_thinkpad='wakeonlan 54:e1:ad:bb:48:53'
 alias word-count=wc
 alias zshrc="code ~/.zshrc"
