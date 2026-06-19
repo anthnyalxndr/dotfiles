@@ -1,5 +1,9 @@
-# Bare dotfiles git dir — never track
+# Bare dotfiles git dir + its bootstrap backups — never track
 .dotfiles/
+.dotfiles-backup-*/
+
+# Machine-local override file (secrets / per-host) — never track
+.config/shell/local
 
 # OS / editor cruft
 .DS_Store
