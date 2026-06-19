@@ -4,7 +4,7 @@
 	name = 04sparing-lambert
 [core]
 	editor = code --wait
-	excludesfile = /Users/ata/.config/git/ignore
+	excludesfile = ~/.config/git/ignore
 [diff]
 	tool = default-difftool
 [difftool "default-difftool"]
@@ -26,6 +26,5 @@
 	br = branch
 [init]
 	defaultBranch = main
-	templateDir = /Users/ata/.config/git/templates
 [credential]
 	helper = cache
