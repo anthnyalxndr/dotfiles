@@ -101,11 +101,18 @@ After it runs, open a new shell — the `dotfiles` alias loads via
 
 ```sh
 dotfiles status                 # what changed (only tracked files appear)
-dotfiles add ~/.zshrc           # stage a specific file — NEVER `dotfiles add -A`
+dotfiles add -u                 # stage ALL edits/deletes to already-tracked files (the common case)
+dotfiles add ~/.zshrc           # onboard a NEW file — use its full path, NEVER `dotfiles add -A`/`.`
 dotfiles commit -m "..."        # commit
 dotfiles push                   # publish to GitHub
 dotfiles diff                   # review pending changes
 ```
+
+**Use `dotfiles add -u` for the everyday case** — committing changes to files already under
+management. The `-u` flag stages modifications and deletions of *tracked* files only; it
+**cannot** accidentally pull in untracked files, junk, or nested repos, which makes it the
+safe choice for scripts/cron too. Reserve an explicit path (`dotfiles add ~/.foo`) for the
+deliberate act of onboarding a brand-new dotfile.
 
 An agent or tool editing a tracked file just shows up as a diff in `dotfiles status` — no
 broken links, no silent drift. Review and `dotfiles commit` it like any other change.
