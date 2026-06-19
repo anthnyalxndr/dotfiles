@@ -19,10 +19,10 @@ The common alternatives and why this repo doesn't use them:
   to the repo. The edit lands in `$HOME`, the repo goes stale, and you don't notice. Because
   files here are edited by tools and agents that do exactly this, symlinks were rejected.
 - **Bare repo (this setup):** files are real files in `$HOME`. Any write — by hand, by a
-  tool, or by an agent — is just a normal change that shows up as a diff in `config status`.
+  tool, or by an agent — is just a normal change that shows up as a diff in `dotfiles status`.
   Nothing breaks, nothing drifts silently.
 
-The trade-off accepted: you drive git through a `config` alias (not plain `git`), you must
+The trade-off accepted: you drive git through a `dotfiles` alias (not plain `git`), you must
 add files explicitly, and a fresh-machine checkout needs a small backup step. See below.
 
 ---
@@ -44,37 +44,38 @@ it doesn't collide with the many other git repos that live under `$HOME` (`~/.oh
 It's wired together with an alias that pre-fills the two locations:
 
 ```sh
-alias config='git --git-dir="$HOME/.dotfiles" --work-tree="$HOME"'
+alias dotfiles='git --git-dir="$HOME/.dotfiles" --work-tree="$HOME"'
 ```
 
-So `config` *is* `git`, just told where its database (`~/.dotfiles`) and work tree (`$HOME`)
-are. This alias is defined in `~/.config/shell/config_alias` and sourced by `~/.profile`.
+So `dotfiles` *is* `git`, just told where its database (`~/.dotfiles`) and work tree
+(`$HOME`) are. This alias is defined in `~/.config/shell/dotfiles_alias` and sourced by
+`~/.profile`.
 
 ### Side-by-side
 
 | | Standard repo | This bare-repo setup |
 |---|---|---|
-| Git command | `git …` | `config …` (the alias) |
+| Git command | `git …` | `dotfiles …` (the alias) |
 | Where you run it | `cd` into the repo first | anywhere — work tree is always `$HOME` |
-| Staging files | `git add .` is fine | **only** `config add <file>` — never `config add -A`/`.` |
+| Staging files | `git add .` is fine | **only** `dotfiles add <file>` — never `dotfiles add -A`/`.` |
 | `… status` | shows the repo | needs `status.showUntrackedFiles=no`, else it lists *all* of `$HOME` |
 | The repo as a place | a browsable, deletable folder | intermingled with your real home dir |
-| New machine | `git clone url ~/project` | clone `--bare`, then `config checkout` (back up conflicts first) |
+| New machine | `git clone url ~/project` | clone `--bare`, then `dotfiles checkout` (back up conflicts first) |
 | Files in `$HOME` | n/a | the actual tracked files, edited in place |
 
 ### Things to internalize
 
 - **`status.showUntrackedFiles=no` is essential.** The work tree is your entire home dir, so
-  without it `config status` would list thousands of untracked files. With it, only files
+  without it `dotfiles status` would list thousands of untracked files. With it, only files
   you've explicitly added show up — and your other repos under `$HOME` stay invisible.
 - **You lose `git status` as a "new untracked file" signal.** You must *remember* to
-  `config add` each new dotfile you want tracked.
-- **The footgun is `config add .` / `config add -A`** near a nested repo or a big directory.
-  Plain `git` typed by mistake in `$HOME` is harmless (no `.git` there, so it just errors) —
-  the danger is specifically the `config` alias plus a wildcard add. Always add explicit
-  paths.
+  `dotfiles add` each new dotfile you want tracked.
+- **The footgun is `dotfiles add .` / `dotfiles add -A`** near a nested repo or a big
+  directory. Plain `git` typed by mistake in `$HOME` is harmless (no `.git` there, so it just
+  errors) — the danger is specifically the `dotfiles` alias plus a wildcard add. Always add
+  explicit paths.
 - **Nested repos are not submodules.** git won't recurse into another repo's `.git`; with
-  `showUntrackedFiles=no` those repos are simply invisible. Just never `config add` inside
+  `showUntrackedFiles=no` those repos are simply invisible. Just never `dotfiles add` inside
   them.
 
 ---
@@ -91,22 +92,23 @@ checks the files out into `$HOME`. If files already exist (e.g. a default `~/.ba
 checkout would refuse to overwrite them — the script automatically moves the conflicting
 files into `~/.dotfiles-backup-<timestamp>/` and retries, so nothing is lost.
 
-After it runs, open a new shell — the `config` alias loads via `~/.config/shell/config_alias`.
+After it runs, open a new shell — the `dotfiles` alias loads via
+`~/.config/shell/dotfiles_alias`.
 
 ---
 
 ## Daily workflow
 
 ```sh
-config status                 # what changed (only tracked files appear)
-config add ~/.zshrc           # stage a specific file — NEVER `config add -A`
-config commit -m "..."        # commit
-config push                   # publish to GitHub
-config diff                   # review pending changes
+dotfiles status                 # what changed (only tracked files appear)
+dotfiles add ~/.zshrc           # stage a specific file — NEVER `dotfiles add -A`
+dotfiles commit -m "..."        # commit
+dotfiles push                   # publish to GitHub
+dotfiles diff                   # review pending changes
 ```
 
-An agent or tool editing a tracked file just shows up as a diff in `config status` — no
-broken links, no silent drift. Review and `config commit` it like any other change.
+An agent or tool editing a tracked file just shows up as a diff in `dotfiles status` — no
+broken links, no silent drift. Review and `dotfiles commit` it like any other change.
 
 ---
 
@@ -131,7 +133,7 @@ Per-OS package installs are driven from the manifests below, not from git branch
 ## Layout
 
 - `~/.config/shell/` — shared shell modules, plus `os/{darwin,linux}/` for OS-specific bits
-  and `config_alias` (defines the `config` alias).
+  and `dotfiles_alias` (defines the `dotfiles` alias).
 - `~/.config/{git,tmux,zsh}/`, `~/.zfunc/`, `~/.cursor/{commands,rules}` — tool config.
 - `Brewfile`, `packages/apt.txt`, `packages/dnf.txt` — package manifests (data).
 - `bootstrap.sh` — fresh-machine setup.
@@ -140,4 +142,4 @@ Per-OS package installs are driven from the manifests below, not from git branch
 
 The previous per-OS branches were deleted from GitHub but preserved as tags
 (`archive/darwin`, `archive/fedora`, `archive/ubuntu_2204`, `archive/ubuntu_2401`,
-`archive/devcontainer`). To inspect one: `config checkout -b restore archive/fedora`.
+`archive/devcontainer`). To inspect one: `dotfiles checkout -b restore archive/fedora`.

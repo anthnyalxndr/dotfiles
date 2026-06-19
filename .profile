@@ -2,7 +2,7 @@
 SHELL_CONFIG="$HOME/.config/shell"
 source "$SHELL_CONFIG/env_variables"
 source "$SHELL_CONFIG/aliases"
-source "$SHELL_CONFIG/config_alias"
+source "$SHELL_CONFIG/dotfiles_alias"
 source "$SHELL_CONFIG/nvm_config"
 source "$SHELL_CONFIG/nnn_config"
 source "$SHELL_CONFIG/functions"
