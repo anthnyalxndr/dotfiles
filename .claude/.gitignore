@@ -15,6 +15,7 @@
 # 2. Re-include the portable config, by explicit path.
 !.gitignore
 !CLAUDE.md
+!settings.json
 !keybindings.json
 !hooks/
 !hooks/**
@@ -27,8 +28,9 @@
 !output-styles/
 !output-styles/**
 
-# NOTE: settings.json is intentionally NOT tracked. On this machine its
-# mcpServers.*.env blocks hold inline secrets. To track it, first replace those
-# values with ${ENV_VAR} references (real values exported from the untracked
-# ~/.config/shell/local), then add a `!settings.json` rule above.
+# NOTE: settings.json is tracked, but only after its inert `mcpServers` block
+# (which held an unused inline OAuth client secret) was removed. Claude Code
+# reads MCP server definitions from ~/.claude.json / .mcp.json, NOT from
+# settings.json, so keep server configs — and any secrets they carry — out of
+# this file and out of the repo.
 # settings.local.json is machine-local and must stay ignored.
