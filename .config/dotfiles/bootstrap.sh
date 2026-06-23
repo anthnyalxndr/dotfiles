@@ -12,6 +12,10 @@ fi
 
 git clone --bare "$REPO" "$GIT_DIR"
 dotfiles config --local status.showUntrackedFiles no
+# Route this repo's hooks to a tracked, version-controlled dir so the secret-scan
+# pre-commit hook is present on every machine. Absolute path (per-machine $HOME);
+# the hook script itself is checked out below.
+dotfiles config --local core.hooksPath "$HOME/.config/dotfiles/git-hooks"
 
 ERR="$(mktemp)"
 trap 'rm -f "$ERR"' EXIT

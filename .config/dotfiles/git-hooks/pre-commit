@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# pre-commit hook for the bare dotfiles repo (wired via core.hooksPath in
+# ~/.config/dotfiles/bootstrap.sh). Secret-scans staged changes with gitleaks
+# and fails closed on a finding. Lives in a tracked dir so it is portable across
+# machines; gitleaks itself is installed via the Brewfile.
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  printf '⚠️  gitleaks not found — skipping secret scan. Install it: brew install gitleaks\n' >&2
+  exit 0
+fi
+
+# --staged scans the staged diff (intended pre-commit usage); --redact keeps any
+# detected secret out of the terminal output; --no-banner quiets the ASCII art.
+gitleaks git --staged --redact --no-banner
+code=$?
+
+if [ "$code" -eq 0 ]; then
+  exit 0
+elif [ "$code" -eq 1 ]; then
+  printf '\n❌ Commit blocked: gitleaks detected a potential secret in the staged changes.\n' >&2
+  printf '   Remove it (use ${ENV_VAR} refs, or move it to the untracked ~/.config/shell/local),\n' >&2
+  printf '   then re-stage. False positive? Add a rule to ~/.gitleaks.toml.\n' >&2
+  exit 1
+else
+  printf '\n⚠️  gitleaks exited with %s (scan error, not a finding). Allowing commit; please investigate.\n' "$code" >&2
+  exit 0
+fi

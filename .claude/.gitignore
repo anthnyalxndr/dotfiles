@@ -1,0 +1,34 @@
+# ~/.claude/.gitignore — allowlist model.
+#
+# Claude Code writes several GB of machine state, caches, session transcripts,
+# history, and secrets into this directory. We version-control ONLY durable,
+# portable, shareable config. Everything else is ignored by default so it can
+# never be accidentally `dotfiles add`-ed (defense-in-depth on top of the bare
+# repo's status.showUntrackedFiles=no).
+#
+# To onboard a new portable file/dir: add a `!`-rule below, then
+#   dotfiles add ~/.claude/<path>
+
+# 1. Ignore everything.
+*
+
+# 2. Re-include the portable config, by explicit path.
+!.gitignore
+!CLAUDE.md
+!keybindings.json
+!hooks/
+!hooks/**
+!skills/
+!skills/**
+!commands/
+!commands/**
+!agents/
+!agents/**
+!output-styles/
+!output-styles/**
+
+# NOTE: settings.json is intentionally NOT tracked. On this machine its
+# mcpServers.*.env blocks hold inline secrets. To track it, first replace those
+# values with ${ENV_VAR} references (real values exported from the untracked
+# ~/.config/shell/local), then add a `!settings.json` rule above.
+# settings.local.json is machine-local and must stay ignored.
