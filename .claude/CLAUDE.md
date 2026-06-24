@@ -29,6 +29,22 @@ hand-roll a new project (and ask those questions) when no template fits.
 - After drafting a plan, recursively review and revise it for accuracy and thoroughness. Keep iterating until you're genuinely confident in it before executing. One pass is rarely enough.
 - If a plan turns out to be wrong mid-execution, stop and re-plan rather than improvising.
 
+## Planning & Backlog
+
+- Keep **one committed planning backlog per repo** as the single source of truth for planned,
+  deferred, and follow-up work. Default: `docs/backlog.md` (or the repo's established equivalent —
+  match what's already there; don't add a parallel one).
+- Record every TODO / deferred item / fast-follow there as a **stable, numbered item**. Don't
+  renumber existing items (specs, ADRs, commits, and code comments reference them by number); append
+  new ids, and mark shipped items done rather than deleting them.
+- **Don't scatter planning** across parallel surfaces — no root `todo.md`/`todo.html`, no per-feature
+  todo files, no burying work only in `// TODO` comments. When you spot work mid-task, add a backlog
+  item and reference it by number instead.
+- The in-session agent task list (the ephemeral todo UI) is **scratch for the current task's steps
+  only** — never a persistent backlog, and never mirrored into the backlog doc.
+- If a repo already has scattered planning docs, consolidate them into the single backlog and
+  retire/redirect the rest (leave a one-line pointer so old links resolve).
+
 ## Commit Messages
 
 Do not add Co-Authored-By trailers to commit messages.
