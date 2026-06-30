@@ -108,3 +108,17 @@ Ask the user if the project should have code quality checks and if so, which of 
 - Never read, log, print, or display `.env` files or any file containing secrets
 - Do not commit credentials, tokens, or API keys — check `git diff --cached` before committing
 - Sensitive files: `.env`, `.env.*`, `*.pem`, `*.key`, `*_rsa`, `*.p12`
+
+## Local CI Runner
+
+Self-hosted GitHub Actions runners on this Mac are the default CI/CD compute. Tooling lives in
+[`anthnyalxndr/local-ci-runner`](https://github.com/anthnyalxndr/local-ci-runner) (scripts symlinked onto `PATH`).
+
+- **`t0k0n` org repos** run CI/CD on the local runner by default (`runs-on: ${{ vars.RUNNER_LABEL || 'self-hosted' }}`).
+  Just commit and push as normal; watch results with `gh run watch` — no special handling.
+- **Personal private repos (just-in-time):** when starting work on a **private** `anthnyalxndr/*` repo that uses
+  GitHub Actions, check for a repo-level runner with `gh api repos/anthnyalxndr/<name>/actions/runners`. If none and
+  the workflows target `self-hosted`, provision one: `setup-local-runner repo anthnyalxndr/<name>`.
+  **Never** do this for public repos (a fork PR can run arbitrary code on the machine).
+- **Override (Mac off / traveling):** `runner-label cloud <org>` routes runs to GitHub-hosted cloud;
+  `runner-label local <org>` switches back.
