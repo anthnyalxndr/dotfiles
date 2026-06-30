@@ -31,19 +31,40 @@ hand-roll a new project (and ask those questions) when no template fits.
 
 ## Planning & Backlog
 
-- Keep **one committed planning backlog per repo** as the single source of truth for planned,
-  deferred, and follow-up work. Default: `docs/backlog.md` (or the repo's established equivalent —
-  match what's already there; don't add a parallel one).
-- Record every TODO / deferred item / fast-follow there as a **stable, numbered item**. Don't
-  renumber existing items (specs, ADRs, commits, and code comments reference them by number); append
-  new ids, and mark shipped items done rather than deleting them.
-- **Don't scatter planning** across parallel surfaces — no root `todo.md`/`todo.html`, no per-feature
-  todo files, no burying work only in `// TODO` comments. When you spot work mid-task, add a backlog
-  item and reference it by number instead.
-- The in-session agent task list (the ephemeral todo UI) is **scratch for the current task's steps
-  only** — never a persistent backlog, and never mirrored into the backlog doc.
-- If a repo already has scattered planning docs, consolidate them into the single backlog and
-  retire/redirect the rest (leave a one-line pointer so old links resolve).
+- **Default to Task Master** (`task-master-ai`) as the single source of truth for planned, deferred,
+  and follow-up work. Tasks live in `.taskmaster/tasks/tasks.json` (committed, git-native). Set it up
+  in a repo with `task-master init`, then point models at the **Claude Code provider** (no API key):
+  `task-master models --set-main sonnet --claude-code` (and `--set-fallback`). Wire the
+  `task-master-ai` MCP at project scope so a session can drive it. Keep exactly one backlog — don't
+  add a parallel one.
+  - **Core CLI:** `task-master next` (dependency- + priority-gated selection) · `list --ready/--blocking`
+    (view) · `add-task --prompt "…" [--dependencies=ids] [--priority=high|medium|low]` (add) ·
+    `set-status <id> <state>` · `expand --id=<id>` / `analyze-complexity` / `update-task` /
+    `fix-dependencies` (refine & break down). Run via `pnpm exec task-master …` in pnpm repos.
+  - **In-session UX** (where the wrapper skills are installed): `/backlog-next` (work the next task end
+    to end → draft PR), `/backlog-add`, `/backlog-refine`, `/backlog-status`.
+  - **Autonomous loop with a human gate:** one task per run → branch off a staging branch
+    (e.g. `auto/backlog`) → implement (TDD) → `pnpm verify` → **draft PR** (`gh pr create --draft`),
+    `set-status review`, stop. **Never auto-merge.** Run unattended with `--permission-mode dontAsk`
+    and a **narrow allowlist that excludes `git merge`, `git reset`, `git push --force`, and
+    `gh pr merge`** so the loop is mechanically incapable of merging to a protected branch; the human
+    performs the merge. See a repo's `docs/runbooks/*-autopilot.md`.
+  - **Caveat:** Task Master has **no Definition-of-Ready gate** — it picks the highest-priority
+    *unblocked* task regardless of size/specificity. Use `analyze-complexity` + `expand` to break work
+    down rather than expecting it to flag under-specified items.
+- **Lightweight fallback — a single `docs/backlog.md`:** for repos that haven't adopted Task Master
+  (or where a dedicated tool isn't warranted), keep one committed `docs/backlog.md` of stable, numbered
+  items. Don't run both — when a repo adopts Task Master, **retire `docs/backlog.md` to a one-line
+  pointer**.
+- **Universal rules (whichever store):**
+  - **Stable ids** — never renumber existing items (specs, ADRs, commits, and comments reference them
+    by number); append new ids; mark shipped items done rather than deleting them.
+  - **Don't scatter planning** across parallel surfaces — no root `todo.md`/`todo.html`, no per-feature
+    todo files, no burying work only in `// TODO` comments. Record it in the backlog and reference by id.
+  - The in-session agent task list (the ephemeral todo UI) is **scratch for the current task's steps
+    only** — never a persistent backlog, and never mirrored into the backlog.
+  - Consolidate any scattered planning docs into the single source and retire/redirect the rest (leave
+    a one-line pointer so old links resolve).
 
 ## Commit Messages
 
