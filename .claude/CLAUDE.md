@@ -29,6 +29,14 @@ hand-roll a new project (and ask those questions) when no template fits.
 - After drafting a plan, recursively review and revise it for accuracy and thoroughness. Keep iterating until you're genuinely confident in it before executing. One pass is rarely enough.
 - If a plan turns out to be wrong mid-execution, stop and re-plan rather than improvising.
 
+## Time & Effort Estimation
+
+- When asked how long something will take — or to size, scope, or estimate any task, feature,
+  project, sprint, or backlog, or to give a deadline, ETA, or timeline — use the `time-estimation`
+  skill instead of giving a single hand-waved number. It decomposes the work, sense-checks each
+  piece by walking the concrete steps, and produces a realistic range adjusted for human-only,
+  AI-only, or human+AI execution. This applies even when the request never uses the word "estimate".
+
 ## Planning & Backlog
 
 - **Default to Task Master** (`task-master-ai`) as the single source of truth for planned, deferred,
@@ -129,6 +137,12 @@ Ask the user if the project should have code quality checks and if so, which of 
 - Never read, log, print, or display `.env` files or any file containing secrets
 - Do not commit credentials, tokens, or API keys — check `git diff --cached` before committing
 - Sensitive files: `.env`, `.env.*`, `*.pem`, `*.key`, `*_rsa`, `*.p12`
+
+## Deployment
+
+- **Never deploy or publish on your own initiative.** Deploy/promote commands (`netlify deploy`, `vercel deploy`, `vercel --prod`, the Vercel/Netlify MCP deploy tools, etc.) run **only when the user explicitly asks** ("deploy", "push it live", "ship it").
+- These commands are **auto-allowed in settings (no confirmation prompt)** so they work when the user is remote and can't approve a prompt. The absence of a prompt is **not** permission to deploy proactively — the discipline is on you.
+- Default flow: edit → verify locally (open the file / preview) → **stop and wait** for an explicit deploy instruction. Don't redeploy after every small edit; repeated deploys waste paid hosting usage.
 
 ## Local CI Runner
 
