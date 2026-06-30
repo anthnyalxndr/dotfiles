@@ -138,8 +138,8 @@ Self-hosted GitHub Actions runners on this Mac are the default CI/CD compute. To
 - **`t0k0n` org repos** run CI/CD on the local runner by default (`runs-on: ${{ vars.RUNNER_LABEL || 'self-hosted' }}`).
   Just commit and push as normal; watch results with `gh run watch` — no special handling.
 - **Personal private repos (just-in-time):** when starting work on a **private** `anthnyalxndr/*` repo that uses
-  GitHub Actions, check for a repo-level runner with `gh api repos/anthnyalxndr/<name>/actions/runners`. If none and
-  the workflows target `self-hosted`, provision one: `setup-local-runner repo anthnyalxndr/<name>`.
+  GitHub Actions, check for a repo runner with `gh api repos/anthnyalxndr/<name>/actions/runners`. If none and
+  the workflows target `self-hosted`, provision a **JIT ephemeral** runner (single-use per job, no sudo): `setup-local-runner jit anthnyalxndr/<name>`.
   **Never** do this for public repos (a fork PR can run arbitrary code on the machine).
 - **Override (Mac off / traveling):** `runner-label cloud <org>` routes runs to GitHub-hosted cloud;
   `runner-label local <org>` switches back.
