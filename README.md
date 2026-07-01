@@ -92,6 +92,19 @@ checks the files out into `$HOME`. If files already exist (e.g. a default `~/.ba
 checkout would refuse to overwrite them — the script automatically moves the conflicting
 files into `~/.dotfiles-backup-<timestamp>/` and retries, so nothing is lost.
 
+Once the checkout succeeds it provisions the machine, **in order**:
+
+1. Installs **Homebrew** if it's missing (may prompt once for your sudo password).
+2. Runs `brew bundle` against `~/.config/dotfiles/Brewfile` to install all packages.
+3. On macOS, runs `~/.config/dotfiles/macos-defaults.sh` to apply system defaults —
+   currently the default-app associations that make **Cursor** open code/config/markup
+   files. This step runs *after* `brew bundle` so its `duti` dependency exists. It installs
+   nothing itself: if `duti` or Cursor is absent it prints an actionable error and skips.
+   Re-run it standalone anytime with `~/.config/dotfiles/macos-defaults.sh`.
+
+Steps 2–3 degrade to a warning on failure, so one flaky package or a missing optional app
+never leaves the checkout half-bootstrapped.
+
 After it runs, open a new shell — the `dotfiles` alias loads via
 `~/.config/shell/dotfiles_alias`.
 

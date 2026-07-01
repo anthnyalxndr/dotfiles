@@ -24,10 +24,11 @@ BACKUP="$HOME/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
 # Check out into $HOME. If pre-existing files would be overwritten, git lists them
 # tab-indented; back those up and retry. Loop so a backup pass that uncovers more
 # conflicts still converges.
+checked_out=0
 for _ in 1 2 3 4 5; do
   if dotfiles checkout 2>"$ERR"; then
-    echo "Dotfiles checked out. Open a new shell (the 'dotfiles' alias loads via ~/.config/shell/dotfiles_alias)."
-    exit 0
+    checked_out=1
+    break
   fi
   moved=0
   while IFS= read -r f; do
@@ -47,6 +48,45 @@ for _ in 1 2 3 4 5; do
   fi
 done
 
-echo "Checkout did not converge after backups:" >&2
-cat "$ERR" >&2
-exit 1
+if [ "$checked_out" -ne 1 ]; then
+  echo "Checkout did not converge after backups:" >&2
+  cat "$ERR" >&2
+  exit 1
+fi
+echo "Dotfiles checked out."
+
+# --- Provision: Homebrew, packages, then macOS defaults ----------------------
+# Order matters: install Homebrew, populate the machine from the Brewfile, and
+# ONLY THEN apply macOS defaults — the default-app step needs duti (from the
+# Brewfile) and the target apps present. Each step degrades to a warning so a
+# fresh checkout is never left half-bootstrapped by one flaky package or a
+# missing optional app.
+BREWFILE="$HOME/.config/dotfiles/Brewfile"
+
+if ! command -v brew >/dev/null 2>&1; then
+  echo "Installing Homebrew (may prompt for your sudo password once)..."
+  NONINTERACTIVE=1 /bin/bash -c \
+    "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+# Load brew into this shell: Apple Silicon, then Intel, then Linuxbrew.
+for _brew in /opt/homebrew/bin/brew /usr/local/bin/brew /home/linuxbrew/.linuxbrew/bin/brew; do
+  [ -x "$_brew" ] && eval "$("$_brew" shellenv)" && break
+done
+
+if command -v brew >/dev/null 2>&1 && [ -f "$BREWFILE" ]; then
+  echo "Installing packages from Brewfile..."
+  brew bundle --file="$BREWFILE" ||
+    echo "warning: some Brewfile entries failed; re-run 'brew bundle --file=$BREWFILE'." >&2
+else
+  echo "warning: brew or Brewfile unavailable; skipping package install." >&2
+fi
+
+# macOS-only defaults (default-app associations, etc.). Runs after packages so
+# duti exists; the script itself errors usefully if a target app is missing.
+if [ "$(uname)" = "Darwin" ]; then
+  echo "Applying macOS defaults..."
+  bash "$HOME/.config/dotfiles/macos-defaults.sh" ||
+    echo "warning: macos-defaults did not complete (see above)." >&2
+fi
+
+echo "Bootstrap complete. Open a new shell so the 'dotfiles' alias loads (via ~/.config/shell/dotfiles_alias)."
