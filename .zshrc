@@ -7,3 +7,7 @@ for file in "$XDG_CONFIG_HOME"/zsh/*(N); do
 done
 
 PROMPT="$ "
+
+# Task Master aliases added on 6/29/2026
+alias tm='task-master'
+alias taskmaster='task-master'

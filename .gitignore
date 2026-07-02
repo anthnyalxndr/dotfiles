@@ -17,3 +17,6 @@
 
 # Binary blobs
 *.tar.gz
+
+# Local Netlify folder
+.netlify
