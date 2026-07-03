@@ -99,8 +99,14 @@ Once the checkout succeeds it provisions the machine, **in order**:
 3. On macOS, runs `~/.config/dotfiles/macos-defaults.sh` to apply system defaults —
    currently the default-app associations that make **Cursor** open code/config/markup
    files. This step runs *after* `brew bundle` so its `duti` dependency exists. It installs
-   nothing itself: if `duti` or Cursor is absent it prints an actionable error and skips.
-   Re-run it standalone anytime with `~/.config/dotfiles/macos-defaults.sh`.
+   nothing itself: if `duti` is missing, or `duti` can't set a type (usually because the
+   target app isn't installed), it prints an actionable error. Re-run it standalone anytime
+   with `~/.config/dotfiles/macos-defaults.sh`.
+
+   The associations live in `~/.config/dotfiles/duti-settings` — a native `duti` settings
+   file, one `<bundle-id>  <extension-or-UTI>  <role>` per line (`#` comments allowed). Edit
+   that file to change what opens in Cursor; the script just preflights and applies it (which
+   you can also do by hand: `duti ~/.config/dotfiles/duti-settings`).
 
 Steps 2–3 degrade to a warning on failure, so one flaky package or a missing optional app
 never leaves the checkout half-bootstrapped.
