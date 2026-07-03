@@ -17,6 +17,8 @@ git hooks, lint/typecheck/test, pnpm/uv, CI, security) plus an agent layer (`AGE
 - **Bootstrap git after copy** (hooks attach to `.git`, so order matters): `git init` → install
   deps (`pnpm install`, or `uv sync && uv run pre-commit install`) → first Conventional commit.
 - **Propagate later template improvements** into an existing repo with `uvx copier update`.
+- **Adopt Backlog.md for task management** once the repo exists — run `/backlog-init` (see
+  Planning & Backlog). The template doesn't bake this in yet, so it's a one-time follow-up step.
 
 Because a scaffolded repo already satisfies the Git Commit Hooks, Code Quality, Package
 Management, and Testing sections below, do **not** re-ask those setup questions for it. Only
@@ -39,31 +41,46 @@ hand-roll a new project (and ask those questions) when no template fits.
 
 ## Planning & Backlog
 
-- **Default to Task Master** (`task-master-ai`) as the single source of truth for planned, deferred,
-  and follow-up work. Tasks live in `.taskmaster/tasks/tasks.json` (committed, git-native). Set it up
-  in a repo with `task-master init`, then point models at the **Claude Code provider** (no API key):
-  `task-master models --set-main sonnet --claude-code` (and `--set-fallback`). Wire the
-  `task-master-ai` MCP at project scope so a session can drive it. Keep exactly one backlog — don't
-  add a parallel one.
-  - **Core CLI:** `task-master next` (dependency- + priority-gated selection) · `list --ready/--blocking`
-    (view) · `add-task --prompt "…" [--dependencies=ids] [--priority=high|medium|low]` (add) ·
-    `set-status <id> <state>` · `expand --id=<id>` / `analyze-complexity` / `update-task` /
-    `fix-dependencies` (refine & break down). Run via `pnpm exec task-master …` in pnpm repos.
-  - **In-session UX** (where the wrapper skills are installed): `/backlog-next` (work the next task end
-    to end → draft PR), `/backlog-add`, `/backlog-refine`, `/backlog-status`.
+- **Default to Backlog.md** (the `backlog` CLI) as the single source of truth for planned, deferred,
+  and follow-up work. Tasks live as one markdown file per task under `backlog/tasks/` (committed,
+  git-native). Adopt it in a repo with `backlog init` (or the `/backlog-init` skill; install with
+  `npm i -g backlog.md` / `brew install backlog-md`). Backlog.md calls **no model and needs no API
+  key** — the agent is the author, the tool just stores — which is exactly why it's the default here:
+  Task Master's `claude-code` provider deadlocks when driven from inside a Claude Code session, so it
+  was retired (2026-07-02). Keep exactly one backlog — don't add a parallel one.
+  - **Drive it through the CLI, never by editing the task markdown files** — the CLI keeps ids,
+    filenames, frontmatter, and relationships consistent. Start task work by reading
+    `backlog instructions overview`. (If the `backlog` MCP server is connected, its `task_*` tools are
+    equivalent; standardize on the CLI so the same steps work in headless/autopilot runs where MCP may
+    be absent.)
+  - **Core CLI:** `backlog task list --plain` / `backlog task view <id> --plain` (view) ·
+    `backlog sequence list --plain` (dependency-ordered phases — **Sequence 1 = the ready/unblocked
+    set**; Backlog has no single `next`, so pick the highest-priority Sequence-1 task) ·
+    `backlog task create "<title>" -d "…" --ac "…" --priority <…> [--dep <ids>]` (add) ·
+    `backlog task edit <id> -s "<status>" --check-ac <n> --plan/--append-notes/--final-summary` (work) ·
+    `backlog search "…" --plain` · `backlog board` / `backlog browser` (Kanban).
+  - **Adding a task — gather the required fields first, and ASK when any is missing.** A task is only
+    ready to create with an outcome-focused **title**, a **description** (the why/outcome, not
+    implementation steps), at least one **testable acceptance criterion**, and a **priority**. If the
+    intent is too vague to write those — especially the acceptance criteria — ask the user targeted
+    questions before creating; **never invent acceptance detail**. (Repeat `--ac` per criterion; a
+    comma inside one `--ac` does not split it.) Search first (`backlog search … --plain`) to avoid dupes.
+  - **In-session UX** (wrapper skills): `/backlog-init`, `/backlog-add`, `/backlog-refine`,
+    `/backlog-status`, `/backlog-next` (work the next ready task end to end → draft PR).
   - **Autonomous loop with a human gate:** one task per run → branch off a staging branch
-    (e.g. `auto/backlog`) → implement (TDD) → `pnpm verify` → **draft PR** (`gh pr create --draft`),
-    `set-status review`, stop. **Never auto-merge.** Run unattended with `--permission-mode dontAsk`
-    and a **narrow allowlist that excludes `git merge`, `git reset`, `git push --force`, and
-    `gh pr merge`** so the loop is mechanically incapable of merging to a protected branch; the human
-    performs the merge. See a repo's `docs/runbooks/*-autopilot.md`.
-  - **Caveat:** Task Master has **no Definition-of-Ready gate** — it picks the highest-priority
-    *unblocked* task regardless of size/specificity. Use `analyze-complexity` + `expand` to break work
-    down rather than expecting it to flag under-specified items.
-- **Lightweight fallback — a single `docs/backlog.md`:** for repos that haven't adopted Task Master
-  (or where a dedicated tool isn't warranted), keep one committed `docs/backlog.md` of stable, numbered
-  items. Don't run both — when a repo adopts Task Master, **retire `docs/backlog.md` to a one-line
-  pointer**.
+    (e.g. `auto/backlog`) → implement (TDD) → repo verify gate (e.g. `pnpm verify`) → **draft PR**
+    (`gh pr create --draft`), set the task to the review status, stop. **Never auto-merge.** Run
+    unattended with `--permission-mode dontAsk` and a **narrow allowlist that excludes `git merge`,
+    `git reset`, `git push --force`, and `gh pr merge`** (allow `Bash(backlog:*)` for task updates) so
+    the loop is mechanically incapable of merging to a protected branch; the human performs the merge.
+    See a repo's `docs/runbooks/*-autopilot.md`.
+  - **Caveats:** Backlog has **no Definition-of-Ready gate** and **no single `next`** — choose with
+    `sequence list` (Sequence 1) + priority, and break oversized tasks into subtasks
+    (`backlog task create -p <id> …`) yourself. Dependency edits reject unknown ids but do **not** catch
+    cycles — don't create them.
+- **Lightweight fallback — a single `docs/backlog.md`:** for throwaway repos where a dedicated tool
+  isn't warranted, keep one committed `docs/backlog.md` of stable, numbered items. Don't run both —
+  when a repo adopts Backlog.md, **retire `docs/backlog.md` to a one-line pointer**.
 - **Universal rules (whichever store):**
   - **Stable ids** — never renumber existing items (specs, ADRs, commits, and comments reference them
     by number); append new ids; mark shipped items done rather than deleting them.
