@@ -66,7 +66,10 @@ hand-roll a new project (and ask those questions) when no template fits.
     questions before creating; **never invent acceptance detail**. (Repeat `--ac` per criterion; a
     comma inside one `--ac` does not split it.) Search first (`backlog search … --plain`) to avoid dupes.
   - **In-session UX** (wrapper skills): `/backlog-init`, `/backlog-add`, `/backlog-refine`,
-    `/backlog-status`, `/backlog-next` (work the next ready task end to end → draft PR).
+    `/backlog-status`, `/backlog-plan [guidance]` (rank the ready set into an ordered next-up list with
+    rationale, steered by optional guidance — focus, pins, exclusions, horizon — that persists in a
+    Backlog.md doc titled `Plan`; `/backlog-next` takes its top item), `/backlog-next` (work
+    the next ready task end to end → draft PR).
   - **Autonomous loop with a human gate:** one task per run → branch off a staging branch
     (e.g. `auto/backlog`) → implement (TDD) → repo verify gate (e.g. `pnpm verify`) → **draft PR**
     (`gh pr create --draft`), set the task to the review status, stop. **Never auto-merge.** Run
@@ -143,6 +146,12 @@ Ask the user if the project should have code quality checks and if so, which of 
 - **Python:** run `ruff check --fix` and `ruff format` before committing
 - Do not suppress linter errors with inline ignore comments without a written justification
 
+## Scripting Language
+
+- **Prefer TypeScript over Python** for scripts, tooling, and glue code in any repo, unless an
+  essential package is only available in Python or the particular task is almost always done in
+  Python (e.g. data science notebooks, ML pipelines).
+
 ## Package Management
 
 - **Prefer `pnpm`** when starting new JavaScript/TypeScript projects
@@ -174,3 +183,41 @@ Self-hosted GitHub Actions runners on this Mac are the default CI/CD compute. To
   **Never** do this for public repos (a fork PR can run arbitrary code on the machine).
 - **Override (Mac off / traveling):** `runner-label cloud <org>` routes runs to GitHub-hosted cloud;
   `runner-label local <org>` switches back.
+
+## Writing for humans
+
+Applies to every piece of prose a person will read: chat replies, documents, reports, commit
+messages, PR descriptions, backlog task text, comments in code. The full pattern list is the
+`writing-for-humans` skill (`~/.claude/skills/writing-for-humans`, a fork of blader/humanizer
+3.0.0 plus local rules 26-35); invoke it to rewrite or review existing text. Its
+`scripts/prose_guard.py` counts the checkable subset over a file; a diagnostic, not a gate.
+
+- Name the reader before you write. Use only words that reader already uses. If the source uses
+  a code, label, or acronym the reader would not know, describe the thing instead. Name a field
+  or label by its kind on first mention ("the Surface field"), in double quotes if it is an
+  ordinary word that misreads (the "When" field); backticks only for identifiers that exist
+  literally in code or data.
+- One idea per sentence, about 20 words or fewer. Prefer a period to a dash, colon, or semicolon.
+  No em-dashes or en-dashes anywhere, except an en-dash inside a number range.
+- State the point directly. Do not announce it first ("Here is what matters", "The real question
+  is") and do not close with a one-line restatement.
+- Do not build sentences as "not X but Y" or "X rather than Y" unless the reader actually
+  believes X. Do not rebut objections nobody has raised.
+- Lists of three only when there are exactly three things. Do not pad or trim to three.
+- Use a bulleted list only when the items are parallel. Otherwise write a paragraph.
+- Bold only labels a reader scans for. Never bold a phrase for emphasis. No emojis, no warning
+  glyphs, no horizontal rules.
+- One hedge per claim at most, and only when you can say what the uncertainty is. Delete
+  "simple", "just", "actually", "exactly", "truly", "useful" and other intensifiers.
+- Use "is", "has", "does". Avoid "serves as", "features", "leverages", "robust", "pivotal",
+  "landscape", "additionally", "crucial", "comprehensive", "holistic".
+- Every claim must match the source you read. If simplifying a sentence would change what the
+  source says, keep the distinction and say it plainly. Say when you have left something out.
+- No greetings, no "I hope this helps", no offers of further help in standalone text.
+- Write whole sentences with their articles and verbs. No arrows, no symbol shorthand, no
+  abbreviation the reader would have to decode. A long sentence becomes two sentences, not a
+  fragment.
+- If a sentence could appear unchanged in another project's document, it says nothing about this
+  one. Replace it with the mechanism, the number, or the instruction, or cut it.
+- Headings in sentence case. A bold lead-in must be followed by detail it did not already state.
+  Parentheses hold a short aside, never a list.
