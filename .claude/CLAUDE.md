@@ -115,7 +115,11 @@ Examples:
 
 ## Branching (Trunk-Based Development)
 
-- **Never commit directly to `main` or `master`** — always work on a branch
+- **Ask about branch protection per project.** The first time you work in a repo, check its
+  `AGENTS.md` for a recorded answer. If there is none, ask the user whether `main` should be
+  protected. Record the answer in the repo's `AGENTS.md` under "SDLC working agreements" so later
+  sessions do not ask again. If yes, never commit directly to `main`, and offer to turn on GitHub
+  branch protection for it. If no, committing directly to `main` is allowed in that repo.
 - Branch names: `<type>/<short-description>` (e.g., `feat/add-oauth`, `fix/null-response`)
 - Keep branches short-lived (merge within 1–2 days)
 - Never use `--force` push. Never bypass hooks with `--no-verify`.
