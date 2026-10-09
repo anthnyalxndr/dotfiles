@@ -61,9 +61,19 @@
     ],
     "deny": [
       "Read(.env)",
-      "Read(.env.*)",
+      "Read(.env.local)",
+      "Read(.env.*.local)",
+      "Read(.env.development)",
+      "Read(.env.production)",
+      "Read(.env.staging)",
+      "Read(.env.test)",
       "Read(**/.env)",
-      "Read(**/.env.*)",
+      "Read(**/.env.local)",
+      "Read(**/.env.*.local)",
+      "Read(**/.env.development)",
+      "Read(**/.env.production)",
+      "Read(**/.env.staging)",
+      "Read(**/.env.test)",
       "Read(**/credentials.json)",
       "Read(**/application_default_credentials.json)",
       "Read(**/*.pem)",
@@ -118,10 +128,14 @@
     "wix@claude-plugins-official": true,
     "imessage@claude-plugins-official": false,
     "neon@claude-plugins-official": true,
-    "mongodb@claude-plugins-official": true
+    "mongodb@claude-plugins-official": true,
+    "shopify-ai-toolkit@claude-plugins-official": true
   },
   "modelSettings": {
     "claude-fable-5-1": {
+      "effortLevel": "high"
+    },
+    "claude-opus-5": {
       "effortLevel": "high"
     }
   },
@@ -130,5 +144,6 @@
   "skipWorkflowUsageWarning": true,
   "verbose": true,
   "preferredNotifChannel": "terminal_bell",
+  "switchModelsOnFlag": false,
   "agentPushNotifEnabled": true
 }
