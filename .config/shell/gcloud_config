@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+# Google Cloud SDK (installed by its own installer into ~/google-cloud-sdk).
+# Guarded so it no-ops on machines without the SDK.
+[ -d "$HOME/google-cloud-sdk/bin" ] && export PATH="$HOME/google-cloud-sdk/bin:$PATH"

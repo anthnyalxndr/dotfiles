@@ -8,6 +8,7 @@ source "$SHELL_CONFIG/nnn_config"
 source "$SHELL_CONFIG/functions"
 source "$SHELL_CONFIG/shell_behavior"
 source "$SHELL_CONFIG/go"
+source "$SHELL_CONFIG/gcloud_config"
 
 # OS-specific modules (darwin / linux).
 OS="$(uname | tr '[:upper:]' '[:lower:]')"
