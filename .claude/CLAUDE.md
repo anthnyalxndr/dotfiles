@@ -17,8 +17,9 @@ git hooks, lint/typecheck/test, pnpm/uv, CI, security) plus an agent layer (`AGE
 - **Bootstrap git after copy** (hooks attach to `.git`, so order matters): `git init` → install
   deps (`pnpm install`, or `uv sync && uv run pre-commit install`) → first Conventional commit.
 - **Propagate later template improvements** into an existing repo with `uvx copier update`.
-- **Adopt Backlog.md for task management** once the repo exists — run `/backlog-init` (see
-  Planning & Backlog). The template doesn't bake this in yet, so it's a one-time follow-up step.
+- **Adopt GitHub Issues task management** once the repo has a GitHub remote: run `/task-init` (see
+  Planning & Tasks). The template writes the AGENTS.md section and the allowlist; `/task-init` creates
+  the labels, the issue forms, and the planning location.
 
 Because a scaffolded repo already satisfies the Git Commit Hooks, Code Quality, Package
 Management, and Testing sections below, do **not** re-ask those setup questions for it. Only
@@ -39,58 +40,56 @@ hand-roll a new project (and ask those questions) when no template fits.
   piece by walking the concrete steps, and produces a realistic range adjusted for human-only,
   AI-only, or human+AI execution. This applies even when the request never uses the word "estimate".
 
-## Planning & Backlog
+## Planning & Tasks
 
-- **Default to Backlog.md** (the `backlog` CLI) as the single source of truth for planned, deferred,
-  and follow-up work. Tasks live as one markdown file per task under `backlog/tasks/` (committed,
-  git-native). Adopt it in a repo with `backlog init` (or the `/backlog-init` skill; install with
-  `npm i -g backlog.md` / `brew install backlog-md`). Backlog.md calls **no model and needs no API
-  key** — the agent is the author, the tool just stores — which is exactly why it's the default here:
-  Task Master's `claude-code` provider deadlocks when driven from inside a Claude Code session, so it
-  was retired (2026-07-02). Keep exactly one backlog — don't add a parallel one.
-  - **Drive it through the CLI, never by editing the task markdown files** — the CLI keeps ids,
-    filenames, frontmatter, and relationships consistent. Start task work by reading
-    `backlog instructions overview`. (If the `backlog` MCP server is connected, its `task_*` tools are
-    equivalent; standardize on the CLI so the same steps work in headless/autopilot runs where MCP may
-    be absent.)
-  - **Core CLI:** `backlog task list --plain` / `backlog task view <id> --plain` (view) ·
-    `backlog sequence list --plain` (dependency-ordered phases — **Sequence 1 = the ready/unblocked
-    set**; Backlog has no single `next`, so pick the highest-priority Sequence-1 task) ·
-    `backlog task create "<title>" -d "…" --ac "…" --priority <…> [--dep <ids>]` (add) ·
-    `backlog task edit <id> -s "<status>" --check-ac <n> --plan/--append-notes/--final-summary` (work) ·
-    `backlog search "…" --plain` · `backlog board` / `backlog browser` (Kanban).
-  - **Adding a task — gather the required fields first, and ASK when any is missing.** A task is only
-    ready to create with an outcome-focused **title**, a **description** (the why/outcome, not
-    implementation steps), at least one **testable acceptance criterion**, and a **priority**. If the
-    intent is too vague to write those — especially the acceptance criteria — ask the user targeted
-    questions before creating; **never invent acceptance detail**. (Repeat `--ac` per criterion; a
-    comma inside one `--ac` does not split it.) Search first (`backlog search … --plain`) to avoid dupes.
-  - **In-session UX** (wrapper skills): `/backlog-init`, `/backlog-add`, `/backlog-refine`,
-    `/backlog-status`, `/backlog-plan [guidance]` (rank the ready set into an ordered next-up list with
-    rationale, steered by optional guidance — focus, pins, exclusions, horizon — that persists in a
-    Backlog.md doc titled `Plan`; `/backlog-next` takes its top item), `/backlog-next` (work
-    the next ready task end to end → draft PR).
-  - **Autonomous loop with a human gate:** one task per run → branch off a staging branch
-    (e.g. `auto/backlog`) → implement (TDD) → repo verify gate (e.g. `pnpm verify`) → **draft PR**
-    (`gh pr create --draft`), set the task to the review status, stop. **Never auto-merge.** Run
-    unattended with `--permission-mode dontAsk` and a **narrow allowlist that excludes `git merge`,
-    `git reset`, `git push --force`, and `gh pr merge`** (allow `Bash(backlog:*)` for task updates) so
-    the loop is mechanically incapable of merging to a protected branch; the human performs the merge.
-    See a repo's `docs/runbooks/*-autopilot.md`.
-  - **Caveats:** Backlog has **no Definition-of-Ready gate** and **no single `next`** — choose with
-    `sequence list` (Sequence 1) + priority, and break oversized tasks into subtasks
-    (`backlog task create -p <id> …`) yourself. Dependency edits reject unknown ids but do **not** catch
-    cycles — don't create them.
-- **Lightweight fallback — a single `docs/backlog.md`:** for throwaway repos where a dedicated tool
-  isn't warranted, keep one committed `docs/backlog.md` of stable, numbered items. Don't run both —
-  when a repo adopts Backlog.md, **retire `docs/backlog.md` to a one-line pointer**.
+- **Default to GitHub Issues through `gh task`** (repo `anthnyalxndr/gh-task`) as the single source of
+  truth for planned, deferred, and follow-up work in any repo with a GitHub remote. The extension
+  enforces the rules: `create` refuses a task without a title, a description, at least one acceptance
+  criterion, and a priority; `ready` is the dependency-ready set (open, labeled `agent` by the owner and
+  not edited by anyone else since, no open blocker or sub-issue, no status label). Leaves (tasks and
+  bugs) live flat in the code repo, one PR to `main` each. Initiatives and the pinned Plan live in a
+  planning repo recorded in `git config gh-task.plan-repo`: the repo itself when it is private, a
+  private companion `<repo>-tasks` when it is public. Ordering is `--blocked-by`; integration work is a
+  leaf blocked by the leaves it integrates; `--stack-on` lands ordered leaves as stacked PRs. Adopt in a
+  repo with `/task-init`, which also converts a leftover `backlog/` store with `gh task migrate`. Keep
+  exactly one store per repo (decided 2026-10-06).
+  - **Drive it through `gh task`, never through raw `gh issue` writes.** Reads use `gh issue view`,
+    `gh issue list`, and `gh task ready | initiatives | plan show`. Writes go through `gh task create`,
+    `start`, `check`, `done`, `plan set`, and `triage`, which keep labels, parents, and bodies
+    consistent. Start task work by reading the repo's AGENTS.md "Task management" section.
+  - **Adding a task: gather the required fields first, and ASK when any is missing.** A task needs an
+    outcome-focused title, a description (the why and the outcome, not implementation steps), at least
+    one testable acceptance criterion, a priority, and a parent initiative (`--parent <n>`) or
+    `--standalone` with a reason. If the intent is too vague to write those, ask targeted questions
+    before creating; never invent acceptance detail. Search first
+    (`gh search issues --owner anthnyalxndr "<words>"`) to avoid duplicates.
+  - **In-session UX** (skills): `/task-init`, `/task-add`, `/task-refine`, `/task-status`,
+    `/task-plan [guidance]` (rank the ready set into an ordered next-up list on the pinned Plan issue;
+    `/task-next` reads it first), `/task-next` (work the next ready issue end to end to a draft PR),
+    `/task-triage` (decide which owner-authored issues an unattended agent may do alone),
+    `/task-autopilot` (launch or schedule the unattended loop).
+  - **Autonomous loop with a human gate:** `task-autopilot` runs `/task-next` once per issue: claim with
+    `gh task start`, implement (TDD), tick criteria with `gh task check` as each is proven, repo verify
+    gate (e.g. `pnpm verify`), draft PR linked with `gh task done`, stop. **Never auto-merge.** It runs
+    `claude -p` with `--permission-mode dontAsk`, allows only the six `gh task` subcommands the loop
+    needs plus git and package-script forms, denies `git merge`, `git reset`, force pushes,
+    `gh pr merge`, raw `gh issue` writes, and package runners, and refuses to launch unless the base
+    branch requires a pull request that the owner cannot bypass. The human merges.
+  - **Caveats:** readiness trusts the owner's `agent` label, so triage or label by hand before expecting
+    the loop to pick something up; a leaf has no children, so split oversized work into sibling leaves
+    under an initiative with `/task-refine`; `main` must carry a pull-request ruleset in every repo the
+    loop runs in.
+- **Lightweight fallback — a single `docs/backlog.md`:** for throwaway repos with no GitHub remote,
+  keep one committed `docs/backlog.md` of stable, numbered items. Don't run both; when a repo adopts
+  `gh task`, **retire `docs/backlog.md` to a one-line pointer**.
 - **Universal rules (whichever store):**
   - **Stable ids** — never renumber existing items (specs, ADRs, commits, and comments reference them
     by number); append new ids; mark shipped items done rather than deleting them.
   - **Don't scatter planning** across parallel surfaces — no root `todo.md`/`todo.html`, no per-feature
-    todo files, no burying work only in `// TODO` comments. Record it in the backlog and reference by id.
+    todo files, no burying work only in `// TODO` comments. Record it as an issue and reference it by
+    number.
   - The in-session agent task list (the ephemeral todo UI) is **scratch for the current task's steps
-    only** — never a persistent backlog, and never mirrored into the backlog.
+    only** — never a persistent store, and never mirrored into the issues.
   - Consolidate any scattered planning docs into the single source and retire/redirect the rest (leave
     a one-line pointer so old links resolve).
 
@@ -191,7 +190,7 @@ Self-hosted GitHub Actions runners on this Mac are the default CI/CD compute. To
 ## Writing for humans
 
 Applies to every piece of prose a person will read: chat replies, documents, reports, commit
-messages, PR descriptions, backlog task text, comments in code. The full pattern list is the
+messages, PR descriptions, issue text, comments in code. The full pattern list is the
 `writing-for-humans` skill (`~/.claude/skills/writing-for-humans`, a fork of blader/humanizer
 3.0.0 plus local rules 26-35); invoke it to rewrite or review existing text. Its
 `scripts/prose_guard.py` counts the checkable subset over a file; a diagnostic, not a gate.
