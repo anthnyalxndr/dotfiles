@@ -2,3 +2,6 @@
 # Google Cloud SDK (installed by its own installer into ~/google-cloud-sdk).
 # Guarded so it no-ops on machines without the SDK.
 [ -d "$HOME/google-cloud-sdk/bin" ] && export PATH="$HOME/google-cloud-sdk/bin:$PATH"
+# Bash completion. zsh completion lives in ~/.config/zsh/tool_completions.
+# shellcheck disable=SC1091
+[ -n "$BASH_VERSION" ] && [ -r "$HOME/google-cloud-sdk/completion.bash.inc" ] && . "$HOME/google-cloud-sdk/completion.bash.inc"

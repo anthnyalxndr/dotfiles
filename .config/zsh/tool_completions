@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+# Tab completion for tools that ship their own zsh completion script.
+# ~/.zshrc sources this directory in name order. This file must sort after
+# oh_my_zsh, which runs compinit; the gcloud script runs its own compinit
+# when compdef is missing, and that would double the startup cost.
+[ -r "$HOME/google-cloud-sdk/completion.zsh.inc" ] && source "$HOME/google-cloud-sdk/completion.zsh.inc"
