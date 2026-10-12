@@ -5,3 +5,9 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 # shellcheck disable=SC1091
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR"/bash_completion
+# nvm keeps whatever Node is already on PATH when it loads (a shell spawned by a terminal app
+# or editor inherits that app's PATH), so the default alias would never apply there. Select it
+# anyway, unless the current directory tree pins a version with an .nvmrc.
+if command -v nvm >/dev/null 2>&1 && [ -z "$(nvm_find_nvmrc 2>/dev/null)" ]; then
+  nvm use --silent default >/dev/null 2>&1
+fi
