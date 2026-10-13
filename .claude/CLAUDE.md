@@ -95,7 +95,7 @@ hand-roll a new project (and ask those questions) when no template fits.
 
 ## Commit Messages
 
-Do not add Co-Authored-By trailers to commit messages.
+Never add Claude attribution lines anywhere: no Co-Authored-By trailers in commits, no "Generated with Claude Code" footer in PR descriptions, and no attribution in issues, comments, or reviews.
 
 All commits MUST use Conventional Commits format:
 
