@@ -114,6 +114,11 @@ never leaves the checkout half-bootstrapped.
 After it runs, open a new shell — the `dotfiles` alias loads via
 `~/.config/shell/dotfiles_alias`.
 
+One thing bootstrap does not do: `~/.claude/settings.json` registers a Claude Code hook,
+`~/.claude/hooks/aw-claude-heartbeat.sh`, that is a symlink into a separate repo. Clone
+`anthnyalxndr/activitywatch-agent` into `~/Projects` and run its `scripts/install-hook.sh`
+to create it; until then Claude Code skips the missing hook.
+
 ---
 
 ## Daily workflow
