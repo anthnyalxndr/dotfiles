@@ -34,3 +34,11 @@
 # settings.json, so keep server configs — and any secrets they carry — out of
 # this file and out of the repo.
 # settings.local.json is machine-local and must stay ignored.
+
+# 3. Inside tracked dirs, keep machine state out. The ActivityWatch session hook
+# (hooks/aw-claude-heartbeat.sh) is a symlink into ~/Projects/activitywatch-agent,
+# which is its source of truth; install it there with scripts/install-hook.sh.
+hooks/aw-claude-heartbeat.sh
+hooks/.aw-state/
+hooks/*.log
+hooks/__pycache__/
